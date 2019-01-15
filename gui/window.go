@@ -70,6 +70,9 @@ func NewWindow() (*Window, error) {
 		gtk.MainQuit()
 	})
 
+	// Remove in future
+	window.UglyDemoCode()
+
 	// Show it
 	window.handle.ShowAll()
 
@@ -78,4 +81,14 @@ func NewWindow() (*Window, error) {
 
 // AddPage will add the given page to this window
 func (win *Window) AddPage(page *Page) {
+}
+
+func (window *Window) UglyDemoCode() {
+	button, _ := gtk.ButtonNewWithLabel("Required")
+	button.SetRelief(gtk.RELIEF_NONE)
+	window.top.PackStart(button, false, false, 0)
+
+	button, _ = gtk.ButtonNewWithLabel("Advanced")
+	button.SetRelief(gtk.RELIEF_NONE)
+	window.top.PackStart(button, false, false, 0)
 }
