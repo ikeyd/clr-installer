@@ -13,7 +13,7 @@ import (
 // Gui is the main tui data struct and holds data about the higher level data for this
 // front end, it also implements the Frontend interface
 type Gui struct {
-	window        *gtk.Window
+	window        *Window
 	model         *model.SystemInstall
 	options       args.Args
 	rootDir       string
@@ -43,29 +43,11 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	gui.installReboot = false
 
 	// Construct main window
-	win, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
+	win, err := NewWindow()
 	if err != nil {
 		return gui.installReboot, err
 	}
 	gui.window = win
-
-	// Headerbar for visual consistency
-	hbar, err := gtk.HeaderBarNew()
-	hbar.SetShowCloseButton(true)
-	gui.window.SetTitlebar(hbar)
-
-	// Set up basic window attributes
-	gui.window.SetTitle("Install Clear Linux")
-	gui.window.SetPosition(gtk.WIN_POS_CENTER)
-	gui.window.SetDefaultSize(800, 600)
-
-	// Temporary for development testing: Close window when asked
-	gui.window.Connect("destroy", func() {
-		gtk.MainQuit()
-	})
-
-	// Show it
-	gui.window.ShowAll()
 
 	// Main loop
 	gtk.Main()
