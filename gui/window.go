@@ -14,6 +14,8 @@ type Window struct {
 	handle *gtk.Window     // Abstract the underlying GtkWindow
 	header *gtk.HeaderBar  // Headerbar for navigation
 	stack  *gtk.Stack      // Hold all of our pages
+	top    *gtk.Box        // Top box for the main labels
+	layout *gtk.Box        // Main layout (vertical)
 }
 
 // New creates a new Window instance
@@ -42,11 +44,26 @@ func NewWindow() (*Window, error) {
 	// Temporary icon: Need .desktop file + icon asset
 	window.handle.SetIconName("system-software-install")
 
+	// Set up the main layout
+	window.layout, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	window.handle.Add(window.layout)
+
+	// Set up the top box
+	window.top, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(window.top, false, false, 0)
+
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
 	if err != nil {
 		return nil, err
 	}
+	window.layout.PackStart(window.stack, true, true, 0)
 
 	// Temporary for development testing: Close window when asked
 	window.handle.Connect("destroy", func() {
