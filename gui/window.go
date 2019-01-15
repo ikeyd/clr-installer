@@ -84,11 +84,11 @@ func (win *Window) AddPage(page *Page) {
 }
 
 func (window *Window) UglyDemoCode() {
-	button, _ := gtk.ButtonNewWithLabel("Required")
+	button, _ := gtk.ButtonNewWithLabel("Required options")
 	button.SetRelief(gtk.RELIEF_NONE)
 	window.top.PackStart(button, false, false, 0)
 
-	button, _ = gtk.ButtonNewWithLabel("Advanced")
+	button, _ = gtk.ButtonNewWithLabel("Advanced options")
 	button.SetRelief(gtk.RELIEF_NONE)
 	window.top.PackStart(button, false, false, 0)
 }
