@@ -39,6 +39,8 @@ func NewWindow() (*Window, error) {
 	window.handle.SetTitle("Install Clear Linux")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 600)
+	// Temporary icon: Need .desktop file + icon asset
+	window.handle.SetIconName("system-software-install")
 
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
