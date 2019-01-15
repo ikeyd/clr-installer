@@ -72,6 +72,7 @@ func NewWindow() (*Window, error) {
 
 	// Remove in future
 	window.UglyDemoCode()
+	window.handle.SetBorderWidth(4)
 
 	// Show it
 	window.handle.ShowAll()
@@ -84,11 +85,15 @@ func (win *Window) AddPage(page *Page) {
 }
 
 func (window *Window) UglyDemoCode() {
-	button, _ := gtk.ButtonNewWithLabel("Required options")
-	button.SetRelief(gtk.RELIEF_NONE)
-	window.top.PackStart(button, false, false, 0)
+	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	window.layout.PackEnd(box, false, false, 0)
+	box.SetHAlign(gtk.ALIGN_END)
 
-	button, _ = gtk.ButtonNewWithLabel("Advanced options")
-	button.SetRelief(gtk.RELIEF_NONE)
-	window.top.PackStart(button, false, false, 0)
+	button, _ := gtk.ButtonNewWithLabel("Cancel")
+	box.PackStart(button, false, false, 2)
+
+	button, _ = gtk.ButtonNewWithLabel("Install")
+	st, _ := button.GetStyleContext()
+	st.AddClass("suggested-action")
+	box.PackStart(button, false, false, 2)
 }
