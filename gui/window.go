@@ -56,3 +56,7 @@ func NewWindow() (*Window, error) {
 
 	return window, nil
 }
+
+// AddPage will add the given page to this window
+func (win *Window) AddPage(page *Page) {
+}
