@@ -11,29 +11,40 @@ import (
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
-	handle *gtk.Window  // Abstract the underlying GtkWindow
+	handle *gtk.Window     // Abstract the underlying GtkWindow
+	header *gtk.HeaderBar  // Headerbar for navigation
+	stack  *gtk.Stack      // Hold all of our pages
 }
 
 // New creates a new Window instance
 func NewWindow() (*Window, error) {
 	window := &Window{}
+	var err error
 
 	// Construct main window
-	win, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
+	window.handle, err = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	if err != nil {
 		return nil, err
 	}
-	window.handle = win
 
 	// Headerbar for visual consistency
-	hbar, err := gtk.HeaderBarNew()
-	hbar.SetShowCloseButton(true)
-	window.handle.SetTitlebar(hbar)
+	window.header, err = gtk.HeaderBarNew()
+	if err != nil {
+		return nil, err
+	}
+	window.header.SetShowCloseButton(true)
+	window.handle.SetTitlebar(window.header)
 
 	// Set up basic window attributes
 	window.handle.SetTitle("Install Clear Linux")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 600)
+
+	// Set up the content stack
+	window.stack, err = gtk.StackNew()
+	if err != nil {
+		return nil, err
+	}
 
 	// Temporary for development testing: Close window when asked
 	window.handle.Connect("destroy", func() {
