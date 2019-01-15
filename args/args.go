@@ -58,7 +58,6 @@ type Args struct {
 	TelemetryPolicy         string
 	PamSalt                 string
 	LogLevel                int
-	ForceGUI                bool
 	ForceTUI                bool
 	Archive                 bool
 	ArchiveSet              bool
@@ -129,10 +128,6 @@ func (args *Args) setCommandLineArgs() (err error) {
 
 	flag.BoolVar(
 		&args.ForceTUI, "tui", false, "Use TUI frontend",
-	)
-
-	flag.BoolVar(
-		&args.ForceGUI, "gui", false, "Use GUI frontend",
 	)
 
 	flag.StringSliceVarP(

@@ -31,10 +31,6 @@ func (gui *Gui) MustRun(args *args.Args) bool {
 	if args.ForceTUI {
 		return false
 	}
-	if args.ForceGUI {
-		return true
-	}
-
 	return gtk.InitCheck(nil) == nil
 }
 
