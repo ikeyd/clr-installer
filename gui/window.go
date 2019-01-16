@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/gotk3/gotk3/gtk"
+	"github.com/clearlinux/clr-installer/model"
 )
 
 // Window provides management of the underlying GtkWindow and
@@ -38,7 +39,7 @@ func NewWindow() (*Window, error) {
 	window.handle.SetTitlebar(window.header)
 
 	// Set up basic window attributes
-	window.handle.SetTitle("Install Clear Linux")
+	window.handle.SetTitle("Clear Linux* OS Installer [" + model.Version + "]")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 600)
 	// Temporary icon: Need .desktop file + icon asset
