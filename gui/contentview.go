@@ -53,12 +53,22 @@ func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 // Right now it does nothing.
 func (view *ContentView) AddPage(page pages.Page) {
 	// TESTING CODE ONLY!
+	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	box.SetHAlign(gtk.ALIGN_START)
+	box.SetMarginStart(18)
+	box.SetMarginEnd(18)
+	box.SetMarginTop(6)
+	box.SetMarginBottom(6)
+
+	// image
+	img, _ := gtk.ImageNewFromIconName(page.GetIcon(), gtk.ICON_SIZE_DIALOG)
+	box.PackStart(img, false, false, 0)
+
+	// label
 	wid, _ := gtk.LabelNew(page.GetTitle())
 	wid.SetHAlign(gtk.ALIGN_START)
-	wid.SetMarginStart(18)
-	wid.SetMarginEnd(18)
-	wid.SetMarginTop(6)
-	wid.SetMarginBottom(6)
-	view.list.Add(wid)
-	wid.ShowAll()
+	box.PackStart(wid, false, false, 0)
+
+	view.list.Add(box)
+	box.ShowAll()
 }
