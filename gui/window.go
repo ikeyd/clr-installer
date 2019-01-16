@@ -12,11 +12,12 @@ import (
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
-	handle *gtk.Window     // Abstract the underlying GtkWindow
-	header *gtk.HeaderBar  // Headerbar for navigation
-	stack  *gtk.Stack      // Hold all of our pages
-	top    *gtk.Box        // Top box for the main labels
-	layout *gtk.Box        // Main layout (vertical)
+	handle   *gtk.Window        // Abstract the underlying GtkWindow
+	header   *gtk.HeaderBar     // Headerbar for navigation
+	stack    *gtk.Stack         // Hold primary switcher content
+	switcher *gtk.StackSwitcher // Allow switching between main components
+	top      *gtk.Box           // Top box for the main labels
+	layout   *gtk.Box           // Main layout (vertical)
 }
 
 // New creates a new Window instance
@@ -59,12 +60,21 @@ func NewWindow() (*Window, error) {
 	}
 	window.layout.PackStart(window.top, false, false, 0)
 
+	// Set up the stack switcher
+	window.switcher, err = gtk.StackSwitcherNew()
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(window.switcher, false, false, 0)
+	window.switcher.SetHAlign(gtk.ALIGN_CENTER)
+
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
 	if err != nil {
 		return nil, err
 	}
 	window.layout.PackStart(window.stack, true, true, 0)
+	window.switcher.SetStack(window.stack)
 
 	// Temporary for development testing: Close window when asked
 	window.handle.Connect("destroy", func() {
@@ -86,6 +96,7 @@ func (win *Window) AddPage(page *Page) {
 }
 
 func (window *Window) UglyDemoCode() {
+	// Set up nav buttons
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	window.layout.PackEnd(box, false, false, 0)
 	box.SetHAlign(gtk.ALIGN_END)
@@ -97,4 +108,10 @@ func (window *Window) UglyDemoCode() {
 	st, _ := button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackStart(button, false, false, 2)
+
+	// Add dumb pages
+	box, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	window.stack.AddTitled(box, "required", "Required options")
+	box, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	window.stack.AddTitled(box, "advanced", "Advanced options")
 }
