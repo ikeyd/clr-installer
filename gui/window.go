@@ -94,6 +94,7 @@ func NewWindow() (*Window, error) {
 	if err != nil {
 		return nil, err
 	}
+	window.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
 	window.layout.PackStart(window.stack, true, true, 0)
 	window.switcher.SetStack(window.stack)
 
