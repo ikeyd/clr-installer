@@ -161,12 +161,14 @@ func (window *Window) UglyDemoCode() {
 	// Set up nav buttons
 	button, _ := gtk.ButtonNewWithLabel("Install")
 	button.SetHAlign(gtk.ALIGN_END)
+	button.SetRelief(gtk.RELIEF_NONE)
 	st, _ = button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackEnd(button, false, false, 2)
 
 	button, _ = gtk.ButtonNewWithLabel("Cancel")
 	button.SetHAlign(gtk.ALIGN_END)
+	button.SetRelief(gtk.RELIEF_NONE)
 	box.PackEnd(button, false, false, 2)
 
 	window.AddPage(pages.NewTimezonePage())
