@@ -42,3 +42,8 @@ func NewContentView() (*ContentView, error) {
 func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 	return view.scroll
 }
+
+// AddPage will add the relevant page to this content view.
+// Right now it does nothing.
+func (view *ContentView) AddPage(page Page) {
+}

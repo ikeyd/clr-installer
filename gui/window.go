@@ -133,8 +133,9 @@ func (window *Window) InitScreens() error {
 	return nil
 }
 
-// AddPage will add the given page to this window
-func (win *Window) AddPage(page *Page) {
+// AddPage will add the page to the relevant screen
+func (window *Window) AddPage(page Page) {
+	window.screens[page.IsRequired()].AddPage(page)
 }
 
 func (window *Window) UglyDemoCode() {
