@@ -29,7 +29,7 @@ func (t *Timezone) GetID() int {
 }
 
 func (t *Timezone) GetIcon() string {
-	return "desktop"
+	return "preferences-system-time"
 }
 
 func (t *Timezone) GetRootWidget() *gtk.Widget {
