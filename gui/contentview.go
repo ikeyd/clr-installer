@@ -35,6 +35,7 @@ func NewContentView() (*ContentView, error) {
 	if view.list, err = gtk.ListBoxNew(); err != nil {
 		return nil, err
 	}
+	view.list.SetSelectionMode(gtk.SELECTION_NONE)
 	view.scroll.Add(view.list)
 
 	return view, nil
