@@ -62,6 +62,7 @@ func NewWindow() (*Window, error) {
 	window.handle.SetTitle("Clear Linux* OS Installer [" + model.Version + "]")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 600)
+	window.handle.SetResizable(false)
 	// Temporary icon: Need .desktop file + icon asset
 	window.handle.SetIconName("system-software-install")
 
