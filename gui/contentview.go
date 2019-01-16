@@ -54,6 +54,11 @@ func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 func (view *ContentView) AddPage(page pages.Page) {
 	// TESTING CODE ONLY!
 	wid, _ := gtk.LabelNew(page.GetTitle())
+	wid.SetHAlign(gtk.ALIGN_START)
+	wid.SetMarginStart(18)
+	wid.SetMarginEnd(18)
+	wid.SetMarginTop(6)
+	wid.SetMarginBottom(6)
 	view.list.Add(wid)
 	wid.ShowAll()
 }
