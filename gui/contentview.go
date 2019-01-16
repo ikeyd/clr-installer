@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -45,5 +46,5 @@ func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 
 // AddPage will add the relevant page to this content view.
 // Right now it does nothing.
-func (view *ContentView) AddPage(page Page) {
+func (view *ContentView) AddPage(page pages.Page) {
 }

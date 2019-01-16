@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -134,7 +135,7 @@ func (window *Window) InitScreens() error {
 }
 
 // AddPage will add the page to the relevant screen
-func (window *Window) AddPage(page Page) {
+func (window *Window) AddPage(page pages.Page) {
 	window.screens[page.IsRequired()].AddPage(page)
 }
 
@@ -151,4 +152,6 @@ func (window *Window) UglyDemoCode() {
 	st, _ := button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackStart(button, false, false, 2)
+
+	window.AddPage(pages.NewTimezonePage())
 }
