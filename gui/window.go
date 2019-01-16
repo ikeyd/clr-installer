@@ -20,7 +20,23 @@ type Window struct {
 	layout   *gtk.Box           // Main layout (vertical)
 }
 
-// New creates a new Window instance
+// ConstructHeaderBar attempts creation of the headerbar
+func (window *Window) ConstructHeaderBar() error {
+	var err error
+
+	// Headerbar for visual consistency
+	window.header, err = gtk.HeaderBarNew()
+	if err != nil {
+		return err
+	}
+
+	window.header.SetShowCloseButton(true)
+	window.handle.SetTitlebar(window.header)
+
+	return nil
+}
+
+// NewWindow creates a new Window instance
 func NewWindow() (*Window, error) {
 	window := &Window{}
 	var err error
@@ -31,13 +47,10 @@ func NewWindow() (*Window, error) {
 		return nil, err
 	}
 
-	// Headerbar for visual consistency
-	window.header, err = gtk.HeaderBarNew()
-	if err != nil {
+	// Need HeaderBar ?
+	if err = window.ConstructHeaderBar(); err != nil {
 		return nil, err
 	}
-	window.header.SetShowCloseButton(true)
-	window.handle.SetTitlebar(window.header)
 
 	// Set up basic window attributes
 	window.handle.SetTitle("Clear Linux* OS Installer [" + model.Version + "]")
