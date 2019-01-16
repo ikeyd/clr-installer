@@ -122,13 +122,13 @@ func (window *Window) InitScreens() error {
 	if window.screens[true], err = NewContentView(); err != nil {
 		return err
 	}
-	window.stack.AddTitled(window.screens[true].GetRootWidget(), "required", "Required options")
+	window.stack.AddTitled(window.screens[ContentViewRequired].GetRootWidget(), "required", "Required options")
 
 	// Set up non required screen
 	if window.screens[false], err = NewContentView(); err != nil {
 		return err
 	}
-	window.stack.AddTitled(window.screens[false].GetRootWidget(), "advanced", "Advanced options")
+	window.stack.AddTitled(window.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "Advanced options")
 
 	return nil
 }

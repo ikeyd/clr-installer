@@ -10,6 +10,11 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
+const (
+	ContentViewRequired = true
+	ContentViewAdvanced = false
+)
+
 // Gui is the main tui data struct and holds data about the higher level data for this
 // front end, it also implements the Frontend interface
 type Gui struct {
