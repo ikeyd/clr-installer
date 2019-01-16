@@ -46,6 +46,11 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	gui.rootDir = rootDir
 	gui.installReboot = false
 
+	// Use dark theming if available to differentiate from other apps
+	if st, err := gtk.SettingsGetDefault(); err == nil {
+		st.SetProperty("gtk-application-prefer-dark-theme", true)
+	}
+
 	// Construct main window
 	win, err := NewWindow()
 	if err != nil {
