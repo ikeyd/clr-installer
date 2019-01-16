@@ -18,6 +18,8 @@ type Window struct {
 	switcher *gtk.StackSwitcher // Allow switching between main components
 	top      *gtk.Box           // Top box for the main labels
 	layout   *gtk.Box           // Main layout (vertical)
+
+	screens  map[bool]*ContentView  // Mapping to content views
 }
 
 // ConstructHeaderBar attempts creation of the headerbar
@@ -40,6 +42,9 @@ func (window *Window) ConstructHeaderBar() error {
 func NewWindow() (*Window, error) {
 	window := &Window{}
 	var err error
+
+	// Set up screen mapping
+	window.screens = make(map[bool]*ContentView)
 
 	// Construct main window
 	window.handle, err = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
@@ -94,6 +99,11 @@ func NewWindow() (*Window, error) {
 		gtk.MainQuit()
 	})
 
+	// Set up primary content views
+	if err = window.InitScreens(); err != nil {
+		return nil, err
+	}
+
 	// Remove in future
 	window.UglyDemoCode()
 	window.handle.SetBorderWidth(4)
@@ -102,6 +112,25 @@ func NewWindow() (*Window, error) {
 	window.handle.ShowAll()
 
 	return window, nil
+}
+
+// InitScreens will set up the content views
+func (window *Window) InitScreens() error {
+	var err error
+
+	// Set up required screen
+	if window.screens[true], err = NewContentView(); err != nil {
+		return err
+	}
+	window.stack.AddTitled(window.screens[true].GetRootWidget(), "required", "Required options")
+
+	// Set up non required screen
+	if window.screens[false], err = NewContentView(); err != nil {
+		return err
+	}
+	window.stack.AddTitled(window.screens[false].GetRootWidget(), "advanced", "Advanced options")
+
+	return nil
 }
 
 // AddPage will add the given page to this window
@@ -121,10 +150,4 @@ func (window *Window) UglyDemoCode() {
 	st, _ := button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackStart(button, false, false, 2)
-
-	// Add dumb pages
-	box, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
-	window.stack.AddTitled(box, "required", "Required options")
-	box, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
-	window.stack.AddTitled(box, "advanced", "Advanced options")
 }
