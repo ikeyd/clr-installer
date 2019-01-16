@@ -5,8 +5,8 @@
 package gui
 
 import (
-	"github.com/gotk3/gotk3/gtk"
 	"github.com/clearlinux/clr-installer/model"
+	"github.com/gotk3/gotk3/gtk"
 )
 
 // Window provides management of the underlying GtkWindow and
@@ -19,7 +19,7 @@ type Window struct {
 	top      *gtk.Box           // Top box for the main labels
 	layout   *gtk.Box           // Main layout (vertical)
 
-	screens  map[bool]*ContentView  // Mapping to content views
+	screens map[bool]*ContentView // Mapping to content views
 }
 
 // ConstructHeaderBar attempts creation of the headerbar

@@ -39,6 +39,6 @@ func NewContentView() (*ContentView, error) {
 }
 
 // GetRootWidget will return the root widget for embedding
-func (view *ContentView) GetRootWidget() (*gtk.ScrolledWindow) {
+func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 	return view.scroll
 }
