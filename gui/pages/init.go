@@ -21,4 +21,6 @@ type Page interface {
 
 const (
 	PageIDTimezone = iota
+	PageIDLanguage = iota
+	PageIDKeyboard = iota
 )

@@ -169,4 +169,6 @@ func (window *Window) UglyDemoCode() {
 	box.PackEnd(button, false, false, 2)
 
 	window.AddPage(pages.NewTimezonePage())
+	window.AddPage(pages.NewLanguagePage())
+	window.AddPage(pages.NewKeyboardPage())
 }
