@@ -18,3 +18,7 @@ type Page interface {
 	GetIcon() string
 	GetRootWidget() *gtk.Widget
 }
+
+const (
+	PageIDTimezone = iota
+)

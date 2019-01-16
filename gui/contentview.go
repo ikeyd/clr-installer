@@ -35,6 +35,7 @@ func NewContentView() (*ContentView, error) {
 	if view.list, err = gtk.ListBoxNew(); err != nil {
 		return nil, err
 	}
+	view.scroll.Add(view.list)
 
 	return view, nil
 }
@@ -47,4 +48,8 @@ func (view *ContentView) GetRootWidget() *gtk.ScrolledWindow {
 // AddPage will add the relevant page to this content view.
 // Right now it does nothing.
 func (view *ContentView) AddPage(page pages.Page) {
+	// TESTING CODE ONLY!
+	wid, _ := gtk.LabelNew(page.GetTitle())
+	view.list.Add(wid)
+	wid.ShowAll()
 }
