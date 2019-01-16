@@ -37,5 +37,5 @@ func (t *Timezone) GetRootWidget() *gtk.Widget {
 }
 
 func (t *Timezone) GetTitle() string {
-	return "Timezone"
+	return "Choose Timezone"
 }
