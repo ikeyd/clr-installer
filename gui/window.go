@@ -109,7 +109,6 @@ func NewWindow() (*Window, error) {
 
 	// Remove in future
 	window.UglyDemoCode()
-	window.handle.SetBorderWidth(4)
 
 	// Show it
 	window.handle.ShowAll()
@@ -144,7 +143,10 @@ func (window *Window) AddPage(page pages.Page) {
 func (window *Window) UglyDemoCode() {
 	// Store components
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	box.SetMarginTop(6)
+	box.SetMarginTop(4)
+	box.SetMarginBottom(6)
+	box.SetMarginEnd(6)
+	box.SetMarginStart(6)
 	window.layout.PackEnd(box, false, false, 0)
 	box.SetHAlign(gtk.ALIGN_FILL)
 
