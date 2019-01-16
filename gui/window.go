@@ -84,6 +84,8 @@ func NewWindow() (*Window, error) {
 	if err != nil {
 		return nil, err
 	}
+	window.switcher.SetMarginTop(4)
+	window.switcher.SetMarginBottom(6)
 	window.layout.PackStart(window.switcher, false, false, 0)
 	window.switcher.SetHAlign(gtk.ALIGN_CENTER)
 
@@ -142,6 +144,7 @@ func (window *Window) AddPage(page pages.Page) {
 func (window *Window) UglyDemoCode() {
 	// Set up nav buttons
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	box.SetMarginTop(6)
 	window.layout.PackEnd(box, false, false, 0)
 	box.SetHAlign(gtk.ALIGN_END)
 
