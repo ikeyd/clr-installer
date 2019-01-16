@@ -84,10 +84,9 @@ func NewWindow() (*Window, error) {
 	if err != nil {
 		return nil, err
 	}
-	window.switcher.SetMarginTop(4)
-	window.switcher.SetMarginBottom(6)
-	window.layout.PackStart(window.switcher, false, false, 0)
-	window.switcher.SetHAlign(gtk.ALIGN_CENTER)
+
+	// Stick the switcher into the headerbar
+	window.header.SetCustomTitle(window.switcher)
 
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
@@ -143,19 +142,29 @@ func (window *Window) AddPage(page pages.Page) {
 }
 
 func (window *Window) UglyDemoCode() {
-	// Set up nav buttons
+	// Store components
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	box.SetMarginTop(6)
 	window.layout.PackEnd(box, false, false, 0)
-	box.SetHAlign(gtk.ALIGN_END)
+	box.SetHAlign(gtk.ALIGN_FILL)
 
-	button, _ := gtk.ButtonNewWithLabel("Cancel")
-	box.PackStart(button, false, false, 2)
+	// Version label
+	label, _ := gtk.LabelNew("Clear Linux* OS Installer [" + model.Version + "]")
+	label.SetHAlign(gtk.ALIGN_START)
+	st, _ := label.GetStyleContext()
+	st.AddClass("dim-label")
+	box.PackStart(label, false, false, 0)
 
-	button, _ = gtk.ButtonNewWithLabel("Install")
-	st, _ := button.GetStyleContext()
+	// Set up nav buttons
+	button, _ := gtk.ButtonNewWithLabel("Install")
+	button.SetHAlign(gtk.ALIGN_END)
+	st, _ = button.GetStyleContext()
 	st.AddClass("suggested-action")
-	box.PackStart(button, false, false, 2)
+	box.PackEnd(button, false, false, 2)
+
+	button, _ = gtk.ButtonNewWithLabel("Cancel")
+	button.SetHAlign(gtk.ALIGN_END)
+	box.PackEnd(button, false, false, 2)
 
 	window.AddPage(pages.NewTimezonePage())
 }
