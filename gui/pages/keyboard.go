@@ -38,7 +38,7 @@ func (t *Keyboard) GetIcon() string {
 	return "preferences-desktop-keyboard-shortcuts"
 }
 
-func (t *Keyboard) GetRootWidget() *gtk.Widget {
+func (t *Keyboard) GetRootWidget() gtk.IWidget {
 	return nil
 }
 

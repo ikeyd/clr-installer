@@ -38,7 +38,7 @@ func (t *Timezone) GetIcon() string {
 	return "preferences-system-time"
 }
 
-func (t *Timezone) GetRootWidget() *gtk.Widget {
+func (t *Timezone) GetRootWidget() gtk.IWidget {
 	return nil
 }
 

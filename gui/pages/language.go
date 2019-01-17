@@ -30,7 +30,7 @@ func (t *Language) GetIcon() string {
 	return "preferences-desktop-locale"
 }
 
-func (t *Language) GetRootWidget() *gtk.Widget {
+func (t *Language) GetRootWidget() gtk.IWidget {
 	return nil
 }
 

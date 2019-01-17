@@ -16,7 +16,7 @@ type Page interface {
 	GetID() int
 	GetTitle() string
 	GetIcon() string
-	GetRootWidget() *gtk.Widget
+	GetRootWidget() gtk.IWidget
 }
 
 // PageController is implemented by the Window struct, and

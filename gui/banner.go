@@ -71,7 +71,7 @@ func NewBanner() (*Banner, error) {
 }
 
 // GetRootWidget returns the embeddable root widget
-func (banner *Banner) GetRootWidget() *gtk.Revealer {
+func (banner *Banner) GetRootWidget() gtk.IWidget {
 	return banner.revealer
 }
 

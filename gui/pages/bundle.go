@@ -30,7 +30,7 @@ func (t *Bundle) GetIcon() string {
 	return "preferences-desktop-applications"
 }
 
-func (t *Bundle) GetRootWidget() *gtk.Widget {
+func (t *Bundle) GetRootWidget() gtk.IWidget {
 	return nil
 }
 
