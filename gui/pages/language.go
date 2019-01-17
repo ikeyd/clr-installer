@@ -34,6 +34,6 @@ func (t *Language) GetRootWidget() gtk.IWidget {
 	return nil
 }
 
-func (t *Language) GetTitle() string {
+func (t *Language) GetSummary() string {
 	return "Choose Language"
 }

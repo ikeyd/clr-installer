@@ -79,6 +79,6 @@ func (bundle *Bundle) GetRootWidget() gtk.IWidget {
 	return bundle.box
 }
 
-func (bundle *Bundle) GetTitle() string {
+func (bundle *Bundle) GetSummary() string {
 	return "Bundle selection"
 }

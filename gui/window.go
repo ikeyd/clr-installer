@@ -247,7 +247,7 @@ func (window *Window) handleMap() {
 
 // ActivatePage will set the view as visible.
 func (window *Window) ActivatePage(page pages.Page) {
-	fmt.Println("Activating: " + page.GetTitle())
+	fmt.Println("Activating: " + page.GetSummary())
 
 	// Hide banner so we can get more room
 	window.banner.Hide()

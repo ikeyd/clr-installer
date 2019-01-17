@@ -42,6 +42,6 @@ func (t *Keyboard) GetRootWidget() gtk.IWidget {
 	return nil
 }
 
-func (t *Keyboard) GetTitle() string {
+func (t *Keyboard) GetSummary() string {
 	return "Configure the Keyboard"
 }

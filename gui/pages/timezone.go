@@ -43,6 +43,6 @@ func (t *Timezone) GetRootWidget() gtk.IWidget {
 	return wid
 }
 
-func (t *Timezone) GetTitle() string {
+func (t *Timezone) GetSummary() string {
 	return "Choose Timezone"
 }

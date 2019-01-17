@@ -14,7 +14,7 @@ import (
 type Page interface {
 	IsRequired() bool
 	GetID() int
-	GetTitle() string
+	GetSummary() string
 	GetIcon() string
 	GetRootWidget() gtk.IWidget
 }

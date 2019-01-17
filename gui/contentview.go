@@ -76,7 +76,7 @@ func (view *ContentView) AddPage(page pages.Page) {
 	box.PackStart(img, false, false, 0)
 
 	// label
-	wid, _ := gtk.LabelNew("<big>" + page.GetTitle() + "</big>")
+	wid, _ := gtk.LabelNew("<big>" + page.GetSummary() + "</big>")
 	wid.SetUseMarkup(true)
 	wid.SetHAlign(gtk.ALIGN_START)
 	box.PackStart(wid, false, false, 0)
