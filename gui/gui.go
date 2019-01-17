@@ -64,7 +64,7 @@ window {
 .installer-welcome-banner {
 	background-color: transparent;
 	border: none;
-	background-image: url('/usr/share/backgrounds/clearlinux/Wire_2560x1440.png');
+	background-image: url('/usr/share/backgrounds/clearlinux/wallpaper_4K_01.jpg');
 }
 
 .invisible-titlebar {

@@ -230,22 +230,23 @@ func (window *Window) CreateFooter(store *gtk.Box) {
 	box.SetMarginTop(4)
 	box.SetMarginBottom(6)
 	box.SetMarginEnd(6)
-	box.SetMarginStart(6)
 	store.PackEnd(box, false, false, 0)
-	box.SetHAlign(gtk.ALIGN_FILL)
+	box.SetHAlign(gtk.ALIGN_END)
 
-	// Set up nav buttons
 	button, _ := gtk.ButtonNewWithLabel("INSTALL")
-	button.SetHAlign(gtk.ALIGN_END)
 	st, _ := button.GetStyleContext()
 	st.AddClass("nav-button")
-	box.PackEnd(button, false, false, 2)
+	button.SetHAlign(gtk.ALIGN_END)
+	box.PackEnd(button, false, false, 4)
 
+	// Set up nav buttons
 	button, _ = gtk.ButtonNewWithLabel("EXIT")
+	button.SetHAlign(gtk.ALIGN_END)
 	st, _ = button.GetStyleContext()
 	st.AddClass("nav-button")
-	button.SetHAlign(gtk.ALIGN_END)
-	box.PackEnd(button, false, false, 2)
+	box.PackEnd(button, false, false, 4)
+
+	box.SetMarginEnd(24)
 }
 
 // We've been mapped on screen
