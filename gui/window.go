@@ -186,6 +186,9 @@ func (window *Window) AddPage(page pages.Page) {
 	// Store root widget too
 	root := page.GetRootWidget()
 	window.pages[id] = root
+	if root != nil {
+		window.rootStack.AddNamed(root, "page:"+string(id))
+	}
 }
 
 func (window *Window) CreateFooter() {
@@ -240,4 +243,12 @@ func (window *Window) ActivatePage(page pages.Page) {
 
 	// Hide banner so we can get more room
 	window.banner.Hide()
+
+	id := page.GetID()
+	root := window.pages[id]
+	if root != nil {
+		// Set the root stack to show the new page
+		window.rootStack.SetVisibleChild(window.pages[id])
+	}
+
 }
