@@ -53,8 +53,13 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	}
 
 	sc, _ := gtk.CssProviderNew()
-	myCSS := ".scroller-special { background-image: none; background-color: transparent; }"
-	sc.LoadFromData(myCSS)
+	customCSS := `
+.scroller-special {
+	background-image: none;
+	background-color: transparent;
+}`
+
+	sc.LoadFromData(customCSS)
 	screen, _ := gdk.ScreenGetDefault()
 	gtk.AddProviderForScreen(screen, sc, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
