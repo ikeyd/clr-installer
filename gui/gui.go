@@ -59,7 +59,14 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	background-color: transparent;
 }
 .installer-welcome-banner {
+	background-color: transparent;
+	border: none;
 	background-image: url('/usr/share/backgrounds/clearlinux/color_logo_wire_2560x1440.png');
+}
+.invisible-titlebar {
+	background-image: none;
+	background-color: transparent;
+	border: none;
 }
 `
 

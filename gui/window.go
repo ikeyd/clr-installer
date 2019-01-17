@@ -52,6 +52,7 @@ func (window *Window) ConstructHeaderBar() error {
 	st.RemoveClass("titlebar")
 	st.RemoveClass("headerbar")
 	st.RemoveClass("header")
+	st.AddClass("invisible-titlebar")
 
 	return nil
 }
