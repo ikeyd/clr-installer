@@ -18,18 +18,26 @@ type PageConstructor func() (pages.Page, error)
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
-	handle    *gtk.Window        // Abstract the underlying GtkWindow
-	header    *gtk.HeaderBar     // Headerbar for navigation
-	stack     *gtk.Stack         // Hold primary switcher content
-	rootStack *gtk.Stack         // Root-level stack
-	switcher  *gtk.StackSwitcher // Allow switching between main components
-	layout    *gtk.Box           // Main layout (vertical)
-	banner    *Banner            // Top banner
+	handle    *gtk.Window // Abstract the underlying GtkWindow
+	rootStack *gtk.Stack  // Root-level stack
+	layout    *gtk.Box    // Main layout (vertical)
+	banner    *Banner     // Top banner
+
+	// Wrap titlebar access
+	title struct {
+		bar *gtk.HeaderBar // Headerbar for navigation
+	}
+
+	// Menus
+	menu struct {
+		stack    *gtk.Stack            // Menu switching
+		switcher *gtk.StackSwitcher    // Allow switching between main menu
+		screens  map[bool]*ContentView // Mapping to content views
+	}
 
 	didInit bool // Whether we've inited the view animation
 
-	screens map[bool]*ContentView // Mapping to content views
-	pages   map[int]gtk.IWidget   // Mapping to each root page
+	pages map[int]gtk.IWidget // Mapping to each root page
 }
 
 // ConstructHeaderBar attempts creation of the headerbar
@@ -37,13 +45,13 @@ func (window *Window) ConstructHeaderBar() error {
 	var err error
 
 	// Headerbar for visual consistency
-	window.header, err = gtk.HeaderBarNew()
+	window.title.bar, err = gtk.HeaderBarNew()
 	if err != nil {
 		return err
 	}
 
-	window.header.SetShowCloseButton(true)
-	window.handle.SetTitlebar(window.header)
+	window.title.bar.SetShowCloseButton(true)
+	window.handle.SetTitlebar(window.title.bar)
 
 	return nil
 }
@@ -55,9 +63,9 @@ func NewWindow() (*Window, error) {
 	// Construct basic window
 	window := &Window{
 		didInit: false,
-		screens: make(map[bool]*ContentView),
 		pages:   make(map[int]gtk.IWidget),
 	}
+	window.menu.screens = make(map[bool]*ContentView)
 
 	// Construct main window
 	window.handle, err = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
@@ -92,13 +100,13 @@ func NewWindow() (*Window, error) {
 	window.layout.PackStart(window.banner.GetRootWidget(), false, false, 0)
 
 	// Set up the stack switcher
-	window.switcher, err = gtk.StackSwitcherNew()
+	window.menu.switcher, err = gtk.StackSwitcherNew()
 	if err != nil {
 		return nil, err
 	}
 
 	// Stick the switcher into the headerbar
-	window.header.SetCustomTitle(window.switcher)
+	window.title.bar.SetCustomTitle(window.menu.switcher)
 
 	// Set up the root stack
 	window.rootStack, err = gtk.StackNew()
@@ -116,15 +124,15 @@ func NewWindow() (*Window, error) {
 	window.layout.PackStart(sep, false, false, 0)
 
 	// Set up the content stack
-	window.stack, err = gtk.StackNew()
+	window.menu.stack, err = gtk.StackNew()
 	if err != nil {
 		return nil, err
 	}
-	window.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT)
-	window.switcher.SetStack(window.stack)
+	window.menu.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT)
+	window.menu.switcher.SetStack(window.menu.stack)
 
 	// Add menu stack to root stack
-	window.rootStack.AddTitled(window.stack, "menu", "Menu")
+	window.rootStack.AddTitled(window.menu.stack, "menu", "Menu")
 
 	// Temporary for development testing: Close window when asked
 	window.handle.Connect("destroy", func() {
@@ -170,16 +178,16 @@ func (window *Window) InitScreens() error {
 	var err error
 
 	// Set up required screen
-	if window.screens[true], err = NewContentView(window); err != nil {
+	if window.menu.screens[true], err = NewContentView(window); err != nil {
 		return err
 	}
-	window.stack.AddTitled(window.screens[ContentViewRequired].GetRootWidget(), "required", "Required options")
+	window.menu.stack.AddTitled(window.menu.screens[ContentViewRequired].GetRootWidget(), "required", "Required options")
 
 	// Set up non required screen
-	if window.screens[false], err = NewContentView(window); err != nil {
+	if window.menu.screens[false], err = NewContentView(window); err != nil {
 		return err
 	}
-	window.stack.AddTitled(window.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "Advanced options")
+	window.menu.stack.AddTitled(window.menu.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "Advanced options")
 
 	return nil
 }
@@ -189,7 +197,7 @@ func (window *Window) AddPage(page pages.Page) {
 	id := page.GetID()
 
 	// Add to the required or advanced(optional) screen
-	window.screens[page.IsRequired()].AddPage(page)
+	window.menu.screens[page.IsRequired()].AddPage(page)
 
 	// Store root widget too
 	root := page.GetRootWidget()
@@ -238,7 +246,7 @@ func (window *Window) handleMap() {
 	glib.TimeoutAdd(200, func() bool {
 		if !window.didInit {
 			window.banner.ShowFirst()
-			window.stack.SetVisibleChildName("required")
+			window.menu.stack.SetVisibleChildName("required")
 			window.didInit = true
 		}
 		return false
