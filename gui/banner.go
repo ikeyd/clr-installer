@@ -15,9 +15,10 @@ const (
 
 // Banner is used to add a nice banner widget to the front of the installer
 type Banner struct {
-	box   *gtk.Box   // Root widget
-	img   *gtk.Image // Our image widget
-	label *gtk.Label // Display label
+	revealer *gtk.Revealer // For animations
+	box      *gtk.Box      // Main layout
+	img      *gtk.Image    // Our image widget
+	label    *gtk.Label    // Display label
 }
 
 // MakeHeader constructs the header component
@@ -26,10 +27,17 @@ func NewBanner() (*Banner, error) {
 	var pbuf *gdk.Pixbuf
 	banner := &Banner{}
 
+	// Create the "holder" (revealer)
+	if banner.revealer, err = gtk.RevealerNew(); err != nil {
+		return nil, err
+	}
+
 	// Create the root box
 	if banner.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
 		return nil, err
 	}
+	banner.revealer.Add(banner.box)
+
 	// Set the margins up
 	banner.box.SetMarginTop(24)
 	banner.box.SetMarginBottom(24)
@@ -62,6 +70,18 @@ func NewBanner() (*Banner, error) {
 }
 
 // GetRootWidget returns the embeddable root widget
-func (banner *Banner) GetRootWidget() *gtk.Box {
-	return banner.box
+func (banner *Banner) GetRootWidget() *gtk.Revealer {
+	return banner.revealer
+}
+
+// Show will animate the banner into view, showing the content
+func (banner *Banner) Show() {
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_DOWN)
+	banner.revealer.SetRevealChild(true)
+}
+
+// Hide will animate the banner out of view, hiding the content
+func (banner *Banner) Hide() {
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_UP)
+	banner.revealer.SetRevealChild(false)
 }
