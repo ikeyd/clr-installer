@@ -150,7 +150,7 @@ func (window *Window) AddPage(page pages.Page) {
 // MakeHeader constructs the header component
 func (window *Window) MakeHeader() {
 	img, _ := gtk.ImageNew()
-	filePath := "clearlinux.png"
+	filePath := "themes/clr.png"
 	pbuf, _ := gdk.PixbufNewFromFileAtSize(filePath, 128, 128)
 	img.SetFromPixbuf(pbuf)
 	img.SetPixelSize(64)
