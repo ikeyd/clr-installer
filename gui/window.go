@@ -25,7 +25,8 @@ type Window struct {
 
 	// Wrap titlebar access
 	title struct {
-		bar *gtk.HeaderBar // Headerbar for navigation
+		bar   *gtk.HeaderBar // Headerbar for navigation
+		stack *gtk.Stack     // Allow switching between title and switcher
 	}
 
 	// Menus
@@ -52,6 +53,8 @@ func (window *Window) ConstructHeaderBar() error {
 
 	window.title.bar.SetShowCloseButton(true)
 	window.handle.SetTitlebar(window.title.bar)
+	window.title.stack, err = gtk.StackNew()
+	window.title.bar.SetCustomTitle(window.title.stack)
 
 	return nil
 }
@@ -106,7 +109,7 @@ func NewWindow() (*Window, error) {
 	}
 
 	// Stick the switcher into the headerbar
-	window.title.bar.SetCustomTitle(window.menu.switcher)
+	window.title.stack.AddNamed(window.menu.switcher, "switcher")
 
 	// Set up the root stack
 	window.rootStack, err = gtk.StackNew()
