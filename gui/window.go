@@ -102,6 +102,7 @@ func NewWindow() (*Window, error) {
 
 	// Set up the root stack
 	window.rootStack, err = gtk.StackNew()
+	window.rootStack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
 	if err != nil {
 		return nil, err
 	}

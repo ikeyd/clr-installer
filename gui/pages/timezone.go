@@ -39,7 +39,8 @@ func (t *Timezone) GetIcon() string {
 }
 
 func (t *Timezone) GetRootWidget() gtk.IWidget {
-	return nil
+	wid, _ := gtk.LabelNew("I am the timezone page :O")
+	return wid
 }
 
 func (t *Timezone) GetTitle() string {
