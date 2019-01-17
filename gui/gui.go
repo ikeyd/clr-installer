@@ -57,7 +57,11 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 .scroller-special {
 	background-image: none;
 	background-color: transparent;
-}`
+}
+.installer-welcome-banner {
+	background-image: url('/usr/share/backgrounds/clearlinux/color_logo_wire_2560x1440.png');
+}
+`
 
 	sc.LoadFromData(customCSS)
 	screen, _ := gdk.ScreenGetDefault()
