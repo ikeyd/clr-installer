@@ -98,7 +98,6 @@ func NewWindow() (*Window, error) {
 	if err != nil {
 		return nil, err
 	}
-	window.layout.PackStart(window.menu.switcher.GetRootWidget(), false, false, 0)
 
 	// To add the *main* content
 	window.contentLayout, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
@@ -120,7 +119,14 @@ func NewWindow() (*Window, error) {
 		return nil, err
 	}
 
-	window.contentLayout.PackStart(window.rootStack, true, true, 0)
+	// We want vertical layout here with buttons above the rootstack
+	vbox, err := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	window.contentLayout.PackStart(vbox, true, true, 0)
+	vbox.PackStart(window.menu.switcher.GetRootWidget(), false, false, 0)
+	vbox.PackStart(window.rootStack, true, true, 0)
 
 	// Set up the content stack
 	window.menu.stack, err = gtk.StackNew()
