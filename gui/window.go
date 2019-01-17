@@ -28,7 +28,7 @@ type Window struct {
 	didInit bool // Whether we've inited the view animation
 
 	screens map[bool]*ContentView // Mapping to content views
-	pages map[int]gtk.IWidget // Mapping to each root page
+	pages   map[int]gtk.IWidget   // Mapping to each root page
 }
 
 // ConstructHeaderBar attempts creation of the headerbar
@@ -55,7 +55,7 @@ func NewWindow() (*Window, error) {
 	window := &Window{
 		didInit: false,
 		screens: make(map[bool]*ContentView),
-		pages: make(map[int]gtk.IWidget),
+		pages:   make(map[int]gtk.IWidget),
 	}
 
 	// Construct main window
