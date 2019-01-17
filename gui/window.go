@@ -27,6 +27,7 @@ type Window struct {
 	title struct {
 		bar   *gtk.HeaderBar // Headerbar for navigation
 		stack *gtk.Stack     // Allow switching between title and switcher
+		label *gtk.Label     // Label to display in title mode
 	}
 
 	// Menus
@@ -51,10 +52,33 @@ func (window *Window) ConstructHeaderBar() error {
 		return err
 	}
 
+	// Set up titlebar
 	window.title.bar.SetShowCloseButton(true)
 	window.handle.SetTitlebar(window.title.bar)
+
+	// Set up stack
 	window.title.stack, err = gtk.StackNew()
+	if err != nil {
+		return err
+	}
+	window.title.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
 	window.title.bar.SetCustomTitle(window.title.stack)
+
+	// Add custom label
+	window.title.label, err = gtk.LabelNew("")
+	if err != nil {
+		return err
+	}
+
+	// Set up title styling
+	st, err := window.title.label.GetStyleContext()
+	if err != nil {
+		return err
+	}
+	st.AddClass("title")
+	window.title.label.ShowAll()
+
+	window.title.stack.AddNamed(window.title.label, "title")
 
 	return nil
 }
@@ -173,7 +197,21 @@ func NewWindow() (*Window, error) {
 	// Show the whole window now
 	window.handle.ShowAll()
 
+	// Show the default view
+	window.ShowDefaultView()
+
 	return window, nil
+}
+
+func (window *Window) ShowDefaultView() {
+	// Ensure switcher is the guy showing now
+	window.title.stack.SetVisibleChildName("switcher")
+
+	// Ensure menu page is set
+	window.menu.stack.SetVisibleChildName("required")
+
+	// And root stack
+	window.rootStack.SetVisibleChildName("menu")
 }
 
 // InitScreens will set up the content views
@@ -270,4 +308,7 @@ func (window *Window) ActivatePage(page pages.Page) {
 		window.rootStack.SetVisibleChild(window.pages[id])
 	}
 
+	// Update title for display
+	window.title.label.SetLabel(page.GetSummary())
+	window.title.stack.SetVisibleChildName("title")
 }
