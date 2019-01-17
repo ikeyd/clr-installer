@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"fmt"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -14,6 +15,7 @@ import (
 type ContentView struct {
 	scroll *gtk.ScrolledWindow
 	list   *gtk.ListBox
+	views  map[int]pages.Page // Mapping of row to page
 }
 
 // NewContentView will attempt creation of a new ContentView
@@ -21,7 +23,9 @@ func NewContentView() (*ContentView, error) {
 	var err error
 
 	// Init the struct
-	view := &ContentView{}
+	view := &ContentView{
+		views: make(map[int]pages.Page),
+	}
 
 	// Set up the scroller
 	if view.scroll, err = gtk.ScrolledWindowNew(nil, nil); err != nil {
@@ -38,7 +42,11 @@ func NewContentView() (*ContentView, error) {
 	if view.list, err = gtk.ListBoxNew(); err != nil {
 		return nil, err
 	}
-	view.list.SetSelectionMode(gtk.SELECTION_NONE)
+
+	// Ensure navigation works properly
+	view.list.SetSelectionMode(gtk.SELECTION_SINGLE)
+	view.list.SetActivateOnSingleClick(true)
+	view.list.Connect("row-activated", view.onRowActivated)
 	view.scroll.Add(view.list)
 
 	return view, nil
@@ -71,6 +79,16 @@ func (view *ContentView) AddPage(page pages.Page) {
 	wid.SetHAlign(gtk.ALIGN_START)
 	box.PackStart(wid, false, false, 0)
 
-	view.list.Add(box)
-	box.ShowAll()
+	wrap, _ := gtk.ListBoxRowNew()
+	wrap.Add(box)
+	wrap.ShowAll()
+	view.list.Add(wrap)
+	view.views[wrap.GetIndex()] = page
+}
+
+func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
+	if row == nil {
+		return
+	}
+	fmt.Println(view.views[row.GetIndex()].GetTitle())
 }
