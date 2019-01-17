@@ -21,6 +21,7 @@ type Bundle struct {
 // NewBundlePage returns a new BundlePage
 func NewBundlePage() (Page, error) {
 	var err error
+	var label *gtk.Label
 	bundle := &Bundle{}
 
 	// Load our bundles
@@ -35,6 +36,17 @@ func NewBundlePage() (Page, error) {
 		return nil, err
 	}
 	bundle.box.SetBorderWidth(8)
+
+	// label
+	label, err = gtk.LabelNew("<big>Select bundles to install</big>")
+	label.SetMarginTop(16)
+	label.SetMarginBottom(16)
+	label.SetHAlign(gtk.ALIGN_START)
+	if err != nil {
+		return nil, err
+	}
+	label.SetUseMarkup(true)
+	bundle.box.PackStart(label, false, false, 0)
 
 	// check list
 	bundle.checks, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
