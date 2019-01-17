@@ -96,7 +96,7 @@ func NewWindow() (*Window, error) {
 	window.header.SetCustomTitle(window.switcher)
 
 	// Create the header
-	window.MakeHeader()
+	window.CreateHeader()
 
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
@@ -117,8 +117,8 @@ func NewWindow() (*Window, error) {
 		return nil, err
 	}
 
-	// Remove in future
-	window.UglyDemoCode()
+	// Create footer area now
+	window.CreateFooter()
 
 	// Our pages
 	pageCreators := []PageConstructor{
@@ -167,7 +167,7 @@ func (window *Window) AddPage(page pages.Page) {
 }
 
 // MakeHeader constructs the header component
-func (window *Window) MakeHeader() {
+func (window *Window) CreateHeader() {
 	img, _ := gtk.ImageNew()
 	filePath := "themes/clr.png"
 	pbuf, _ := gdk.PixbufNewFromFileAtSize(filePath, 128, 128)
@@ -185,7 +185,7 @@ func (window *Window) MakeHeader() {
 	window.top.PackStart(label, true, true, 0)
 }
 
-func (window *Window) UglyDemoCode() {
+func (window *Window) CreateFooter() {
 	// Store components
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	box.SetMarginTop(4)
