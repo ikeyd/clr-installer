@@ -56,17 +56,46 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	customCSS := `
 .scroller-special {
 	background-image: none;
-	background-color: transparent;
+	background-color: #414449;
+}
+window {
+	background-color: #414449;
 }
 .installer-welcome-banner {
 	background-color: transparent;
 	border: none;
-	background-image: url('/usr/share/backgrounds/clearlinux/color_logo_wire_2560x1440.png');
+	background-image: url('/usr/share/backgrounds/clearlinux/Wire_2560x1440.png');
 }
+
 .invisible-titlebar {
 	background-image: none;
 	background-color: transparent;
 	border: none;
+}
+
+.installer-switcher button {
+	background-image: none;
+	border-image: none;
+	border: none;
+	background-color: #272B2E;
+	border: 1px solid #272B2E;
+	border-radius: 0px;
+	box-shadow: none;
+}
+
+.installer-switcher button:checked {
+	background-image: none;
+	border-image: none;
+	border: none;
+	background-color: #414449;
+	border: 1px solid #414449;
+	border-radius: 0px;
+	box-shadow: none;
+}
+.nav-button {
+	background-color: #5ECBF2;
+	color: white;
+	border-radius: 1px;
 }
 `
 

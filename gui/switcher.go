@@ -41,7 +41,6 @@ func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 		return nil, err
 	}
 	st.AddClass("installer-switcher")
-	st.AddClass("linked")
 
 	// Required options
 	switcher.buttons.required, err = createFancyButton("<b>REQUIRED OPTIONS</b>\n<small>Takes approximately 2 minutes</small>")

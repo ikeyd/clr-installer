@@ -238,10 +238,12 @@ func (window *Window) CreateFooter(store *gtk.Box) {
 	button, _ := gtk.ButtonNewWithLabel("INSTALL")
 	button.SetHAlign(gtk.ALIGN_END)
 	st, _ := button.GetStyleContext()
-	st.AddClass("suggested-action")
+	st.AddClass("nav-button")
 	box.PackEnd(button, false, false, 2)
 
 	button, _ = gtk.ButtonNewWithLabel("EXIT")
+	st, _ = button.GetStyleContext()
+	st.AddClass("nav-button")
 	button.SetHAlign(gtk.ALIGN_END)
 	box.PackEnd(button, false, false, 2)
 }
