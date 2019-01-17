@@ -18,12 +18,13 @@ type PageConstructor func() (pages.Page, error)
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
-	handle   *gtk.Window        // Abstract the underlying GtkWindow
-	header   *gtk.HeaderBar     // Headerbar for navigation
-	stack    *gtk.Stack         // Hold primary switcher content
-	switcher *gtk.StackSwitcher // Allow switching between main components
-	layout   *gtk.Box           // Main layout (vertical)
-	banner   *Banner            // Top banner
+	handle    *gtk.Window        // Abstract the underlying GtkWindow
+	header    *gtk.HeaderBar     // Headerbar for navigation
+	stack     *gtk.Stack         // Hold primary switcher content
+	rootStack *gtk.Stack         // Root-level stack
+	switcher  *gtk.StackSwitcher // Allow switching between main components
+	layout    *gtk.Box           // Main layout (vertical)
+	banner    *Banner            // Top banner
 
 	didInit bool // Whether we've inited the view animation
 
@@ -99,14 +100,23 @@ func NewWindow() (*Window, error) {
 	// Stick the switcher into the headerbar
 	window.header.SetCustomTitle(window.switcher)
 
+	// Set up the root stack
+	window.rootStack, err = gtk.StackNew()
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(window.rootStack, true, true, 0)
+
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
 	if err != nil {
 		return nil, err
 	}
 	window.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
-	window.layout.PackStart(window.stack, true, true, 0)
 	window.switcher.SetStack(window.stack)
+
+	// Add menu stack to root stack
+	window.rootStack.AddTitled(window.stack, "menu", "Menu")
 
 	// Temporary for development testing: Close window when asked
 	window.handle.Connect("destroy", func() {
