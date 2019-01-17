@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -63,6 +64,7 @@ func NewBanner() (*Banner, error) {
 
 	// Sort the label out
 	labelText := "<span font-size='xx-large'>Welcome to\nClear Linux\nDesktop\nInstallation</span>"
+	labelText += "\n\n<small>Version " + model.Version + "</small>"
 	if banner.label, err = gtk.LabelNew(labelText); err != nil {
 		return nil, err
 	}

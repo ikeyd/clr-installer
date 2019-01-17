@@ -151,13 +151,6 @@ func NewWindow() (*Window, error) {
 	}
 	window.contentLayout.PackStart(window.rootStack, true, true, 0)
 
-	// We want a visual separator as we're not using shadows
-	sep, err := gtk.SeparatorNew(gtk.ORIENTATION_HORIZONTAL)
-	if err != nil {
-		return nil, err
-	}
-	window.layout.PackStart(sep, false, false, 0)
-
 	// Set up the content stack
 	window.menu.stack, err = gtk.StackNew()
 	if err != nil {
@@ -266,18 +259,11 @@ func (window *Window) CreateFooter() {
 	window.layout.PackEnd(box, false, false, 0)
 	box.SetHAlign(gtk.ALIGN_FILL)
 
-	// Version label
-	label, _ := gtk.LabelNew("Clear Linux* OS Installer [" + model.Version + "]")
-	label.SetHAlign(gtk.ALIGN_START)
-	st, _ := label.GetStyleContext()
-	st.AddClass("dim-label")
-	box.PackStart(label, false, false, 0)
-
 	// Set up nav buttons
 	button, _ := gtk.ButtonNewWithLabel("Install")
 	button.SetHAlign(gtk.ALIGN_END)
 	button.SetRelief(gtk.RELIEF_NONE)
-	st, _ = button.GetStyleContext()
+	st, _ := button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackEnd(button, false, false, 2)
 
