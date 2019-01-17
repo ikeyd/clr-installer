@@ -7,6 +7,7 @@ package gui
 import (
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/clearlinux/clr-installer/model"
+	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -22,6 +23,8 @@ type Window struct {
 	switcher *gtk.StackSwitcher // Allow switching between main components
 	layout   *gtk.Box           // Main layout (vertical)
 	banner   *Banner            // Top banner
+
+	didInit bool // Whether we've inited the view animation
 
 	screens map[bool]*ContentView // Mapping to content views
 }
@@ -44,7 +47,7 @@ func (window *Window) ConstructHeaderBar() error {
 
 // NewWindow creates a new Window instance
 func NewWindow() (*Window, error) {
-	window := &Window{}
+	window := &Window{didInit: false}
 	var err error
 
 	// Set up screen mapping
@@ -104,6 +107,9 @@ func NewWindow() (*Window, error) {
 	window.handle.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
+
+	// On map, expose the revealer
+	window.handle.Connect("map", window.handleMap)
 
 	// Set up primary content views
 	if err = window.InitScreens(); err != nil {
@@ -189,4 +195,19 @@ func (window *Window) CreateFooter() {
 	button.SetHAlign(gtk.ALIGN_END)
 	button.SetRelief(gtk.RELIEF_NONE)
 	box.PackEnd(button, false, false, 2)
+}
+
+// We've been mapped on screen
+func (window *Window) handleMap() {
+	if window.didInit {
+		return
+	}
+	glib.TimeoutAdd(200, func() bool {
+		if !window.didInit {
+			window.banner.ShowFirst()
+			window.stack.SetVisibleChildName("required")
+			window.didInit = true
+		}
+		return false
+	})
 }

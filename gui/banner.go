@@ -37,6 +37,7 @@ func NewBanner() (*Banner, error) {
 		return nil, err
 	}
 	banner.revealer.Add(banner.box)
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_CROSSFADE)
 
 	// Set the margins up
 	banner.box.SetMarginTop(24)
@@ -74,14 +75,23 @@ func (banner *Banner) GetRootWidget() *gtk.Revealer {
 	return banner.revealer
 }
 
+// ShowFirst will display the banner for the first time during an intro sequence
+func (banner *Banner) ShowFirst() {
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_CROSSFADE)
+	banner.revealer.SetTransitionDuration(3000)
+	banner.revealer.SetRevealChild(true)
+}
+
 // Show will animate the banner into view, showing the content
 func (banner *Banner) Show() {
 	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_DOWN)
+	banner.revealer.SetTransitionDuration(250)
 	banner.revealer.SetRevealChild(true)
 }
 
 // Hide will animate the banner out of view, hiding the content
 func (banner *Banner) Hide() {
 	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_UP)
+	banner.revealer.SetTransitionDuration(250)
 	banner.revealer.SetRevealChild(false)
 }
