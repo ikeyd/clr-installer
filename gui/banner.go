@@ -13,47 +13,55 @@ const (
 	clearLinuxImage = "themes/clr.png"
 )
 
+// Banner is used to add a nice banner widget to the front of the installer
+type Banner struct {
+	box   *gtk.Box   // Root widget
+	img   *gtk.Image // Our image widget
+	label *gtk.Label // Display label
+}
+
 // MakeHeader constructs the header component
-func CreateBanner() (*gtk.Box, error) {
-	var (
-		err   error
-		box   *gtk.Box
-		img   *gtk.Image
-		pbuf  *gdk.Pixbuf
-		label *gtk.Label
-	)
+func NewBanner() (*Banner, error) {
+	var err error
+	var pbuf *gdk.Pixbuf
+	banner := &Banner{}
 
 	// Create the root box
-	if box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+	if banner.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
 		return nil, err
 	}
 	// Set the margins up
-	box.SetMarginTop(24)
-	box.SetMarginBottom(24)
+	banner.box.SetMarginTop(24)
+	banner.box.SetMarginBottom(24)
 
 	// Construct the image
-	if img, err = gtk.ImageNew(); err != nil {
+	if banner.img, err = gtk.ImageNew(); err != nil {
 		return nil, err
 	}
 	if pbuf, err = gdk.PixbufNewFromFileAtSize(clearLinuxImage, 128, 128); err != nil {
 		return nil, err
 	}
-	img.SetFromPixbuf(pbuf)
-	img.SetPixelSize(64)
-	img.SetHAlign(gtk.ALIGN_START)
-	box.PackStart(img, false, false, 0)
-	box.SetHAlign(gtk.ALIGN_CENTER)
+	banner.img.SetFromPixbuf(pbuf)
+	banner.img.SetPixelSize(64)
+	banner.img.SetHAlign(gtk.ALIGN_START)
+	banner.box.PackStart(banner.img, false, false, 0)
+	banner.box.SetHAlign(gtk.ALIGN_CENTER)
 
 	// Sort the label out
 	labelText := "<span font-size='xx-large'>Install Clear Linux* OS</span>\n\nTODO: Insert awesome header widget in this general region.\nKinda show off why this is an awesome decision."
-	if label, err = gtk.LabelNew(labelText); err != nil {
+	if banner.label, err = gtk.LabelNew(labelText); err != nil {
 		return nil, err
 	}
-	label.SetUseMarkup(true)
-	label.SetMarginStart(40)
-	label.SetHAlign(gtk.ALIGN_START)
-	label.SetVAlign(gtk.ALIGN_CENTER)
-	box.PackStart(label, true, true, 0)
+	banner.label.SetUseMarkup(true)
+	banner.label.SetMarginStart(40)
+	banner.label.SetHAlign(gtk.ALIGN_START)
+	banner.label.SetVAlign(gtk.ALIGN_CENTER)
+	banner.box.PackStart(banner.label, true, true, 0)
 
-	return box, nil
+	return banner, nil
+}
+
+// GetRootWidget returns the embeddable root widget
+func (banner *Banner) GetRootWidget() *gtk.Box {
+	return banner.box
 }

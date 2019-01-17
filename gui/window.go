@@ -21,7 +21,7 @@ type Window struct {
 	stack    *gtk.Stack         // Hold primary switcher content
 	switcher *gtk.StackSwitcher // Allow switching between main components
 	layout   *gtk.Box           // Main layout (vertical)
-	banner   *gtk.Box           // Top banner
+	banner   *Banner            // Top banner
 
 	screens map[bool]*ContentView // Mapping to content views
 }
@@ -77,10 +77,10 @@ func NewWindow() (*Window, error) {
 	window.handle.Add(window.layout)
 
 	// Create the banner
-	if window.banner, err = CreateBanner(); err != nil {
+	if window.banner, err = NewBanner(); err != nil {
 		return nil, err
 	}
-	window.layout.PackStart(window.banner, false, false, 0)
+	window.layout.PackStart(window.banner.GetRootWidget(), false, false, 0)
 
 	// Set up the stack switcher
 	window.switcher, err = gtk.StackSwitcherNew()
