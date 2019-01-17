@@ -12,13 +12,17 @@ import (
 type Switcher struct {
 	box   *gtk.Box   // Main layout
 	stack *gtk.Stack // Stack to control
+
+	buttons struct {
+		required *gtk.RadioButton
+		advanced *gtk.RadioButton
+	}
 }
 
 // MakeHeader constructs the header component
 func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 	var err error
 	var st *gtk.StyleContext
-	var button *gtk.Button
 
 	// Create switcher
 	switcher := &Switcher{
@@ -40,37 +44,43 @@ func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 	st.AddClass("linked")
 
 	// Required options
-	button, err = createFancyButton("<b>REQUIRED OPTIONS</b>\n<small>Takes approximately 2 minutes</small>")
+	switcher.buttons.required, err = createFancyButton("<b>REQUIRED OPTIONS</b>\n<small>Takes approximately 2 minutes</small>")
 	if err != nil {
 		return nil, err
 	}
-	button.Connect("clicked", func() { switcher.switchTo("required") })
-
-	switcher.box.PackStart(button, true, true, 0)
+	switcher.buttons.required.SetActive(true)
+	switcher.buttons.required.Connect("toggled", func() { switcher.switchTo(switcher.buttons.required, "required") })
+	switcher.box.PackStart(switcher.buttons.required, true, true, 0)
 
 	// Advanced options
-	button, err = createFancyButton("<b>ADVANCED OPTIONS</b>\n<small>Customize setup</small>")
+	switcher.buttons.advanced, err = createFancyButton("<b>ADVANCED OPTIONS</b>\n<small>Customize setup</small>")
 	if err != nil {
 		return nil, err
 	}
-	button.Connect("clicked", func() { switcher.switchTo("advanced") })
-	switcher.box.PackStart(button, true, true, 0)
+	switcher.buttons.advanced.JoinGroup(switcher.buttons.required)
+	switcher.buttons.advanced.Connect("toggled", func() { switcher.switchTo(switcher.buttons.advanced, "advanced") })
+	switcher.box.PackStart(switcher.buttons.advanced, true, true, 0)
 
 	return switcher, nil
 }
 
-func (switcher *Switcher) switchTo(id string) {
+// handle switching to another view
+func (switcher *Switcher) switchTo(button *gtk.RadioButton, id string) {
 	if switcher.stack == nil {
+		return
+	}
+	if !button.GetActive() {
 		return
 	}
 	switcher.stack.SetVisibleChildName(id)
 }
 
-func createFancyButton(text string) (*gtk.Button, error) {
-	button, err := gtk.ButtonNew()
+func createFancyButton(text string) (*gtk.RadioButton, error) {
+	button, err := gtk.RadioButtonNew(nil)
 	if err != nil {
 		return nil, err
 	}
+	button.SetMode(false)
 	label, err := gtk.LabelNew(text)
 	if err != nil {
 		return nil, err
