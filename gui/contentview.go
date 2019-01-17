@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"fmt"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -13,18 +12,21 @@ import (
 // ContentView is used to encapsulate the Required/Advanced options view
 // by wrapping them into simple styled lists
 type ContentView struct {
+	views      map[int]pages.Page // Mapping of row to page
+	controller pages.Controller
+
 	scroll *gtk.ScrolledWindow
 	list   *gtk.ListBox
-	views  map[int]pages.Page // Mapping of row to page
 }
 
 // NewContentView will attempt creation of a new ContentView
-func NewContentView() (*ContentView, error) {
+func NewContentView(controller pages.Controller) (*ContentView, error) {
 	var err error
 
 	// Init the struct
 	view := &ContentView{
-		views: make(map[int]pages.Page),
+		controller: controller,
+		views:      make(map[int]pages.Page),
 	}
 
 	// Set up the scroller
@@ -90,5 +92,6 @@ func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 	if row == nil {
 		return
 	}
-	fmt.Println(view.views[row.GetIndex()].GetTitle())
+	// Go activate this.
+	view.controller.ActivatePage(view.views[row.GetIndex()])
 }

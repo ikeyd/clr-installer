@@ -19,6 +19,13 @@ type Page interface {
 	GetRootWidget() *gtk.Widget
 }
 
+// PageController is implemented by the Window struct, and
+// is used by pages and ContentView to exert some control
+// over workflow.
+type Controller interface {
+	ActivatePage(Page)
+}
+
 const (
 	PageIDTimezone = iota
 	PageIDLanguage = iota

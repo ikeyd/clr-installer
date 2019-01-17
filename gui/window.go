@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"fmt"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/glib"
@@ -147,13 +148,13 @@ func (window *Window) InitScreens() error {
 	var err error
 
 	// Set up required screen
-	if window.screens[true], err = NewContentView(); err != nil {
+	if window.screens[true], err = NewContentView(window); err != nil {
 		return err
 	}
 	window.stack.AddTitled(window.screens[ContentViewRequired].GetRootWidget(), "required", "Required options")
 
 	// Set up non required screen
-	if window.screens[false], err = NewContentView(); err != nil {
+	if window.screens[false], err = NewContentView(window); err != nil {
 		return err
 	}
 	window.stack.AddTitled(window.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "Advanced options")
@@ -210,4 +211,9 @@ func (window *Window) handleMap() {
 		}
 		return false
 	})
+}
+
+// ActivatePage will set the view as visible.
+func (window *Window) ActivatePage(page pages.Page) {
+	fmt.Println("Activating: " + page.GetTitle())
 }
