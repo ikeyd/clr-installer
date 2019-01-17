@@ -24,13 +24,6 @@ type Window struct {
 	contentLayout *gtk.Box    // content layout (horizontal)
 	banner        *Banner     // Top banner
 
-	// Wrap titlebar access
-	title struct {
-		bar   *gtk.HeaderBar // Headerbar for navigation
-		stack *gtk.Stack     // Allow switching between title and switcher
-		label *gtk.Label     // Label to display in title mode
-	}
-
 	// Menus
 	menu struct {
 		stack    *gtk.Stack            // Menu switching
@@ -45,41 +38,20 @@ type Window struct {
 
 // ConstructHeaderBar attempts creation of the headerbar
 func (window *Window) ConstructHeaderBar() error {
-	var err error
-
-	// Headerbar for visual consistency
-	window.title.bar, err = gtk.HeaderBarNew()
+	box, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	if err != nil {
 		return err
 	}
 
-	// Set up titlebar
-	window.title.bar.SetShowCloseButton(true)
-	window.handle.SetTitlebar(window.title.bar)
-
-	// Set up stack
-	window.title.stack, err = gtk.StackNew()
-	if err != nil {
-		return err
-	}
-	window.title.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
-	window.title.bar.SetCustomTitle(window.title.stack)
-
-	// Add custom label
-	window.title.label, err = gtk.LabelNew("")
+	st, err := box.GetStyleContext()
 	if err != nil {
 		return err
 	}
 
-	// Set up title styling
-	st, err := window.title.label.GetStyleContext()
-	if err != nil {
-		return err
-	}
-	st.AddClass("title")
-	window.title.label.ShowAll()
-
-	window.title.stack.AddNamed(window.title.label, "title")
+	window.handle.SetTitlebar(box)
+	st.RemoveClass("titlebar")
+	st.RemoveClass("headerbar")
+	st.RemoveClass("header")
 
 	return nil
 }
@@ -121,6 +93,14 @@ func NewWindow() (*Window, error) {
 	}
 	window.handle.Add(window.layout)
 
+	// Set up the stack switcher
+	window.menu.switcher, err = gtk.StackSwitcherNew()
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(window.menu.switcher, false, false, 0)
+	window.menu.switcher.SetHAlign(gtk.ALIGN_END)
+
 	// To add the *main* content
 	window.contentLayout, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	if err != nil {
@@ -134,21 +114,13 @@ func NewWindow() (*Window, error) {
 	}
 	window.contentLayout.PackStart(window.banner.GetRootWidget(), false, false, 0)
 
-	// Set up the stack switcher
-	window.menu.switcher, err = gtk.StackSwitcherNew()
-	if err != nil {
-		return nil, err
-	}
-
-	// Stick the switcher into the headerbar
-	window.title.stack.AddNamed(window.menu.switcher, "switcher")
-
 	// Set up the root stack
 	window.rootStack, err = gtk.StackNew()
 	window.rootStack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
 	if err != nil {
 		return nil, err
 	}
+
 	window.contentLayout.PackStart(window.rootStack, true, true, 0)
 
 	// Set up the content stack
@@ -205,9 +177,6 @@ func NewWindow() (*Window, error) {
 }
 
 func (window *Window) ShowDefaultView() {
-	// Ensure switcher is the guy showing now
-	window.title.stack.SetVisibleChildName("switcher")
-
 	// Ensure menu page is set
 	window.menu.stack.SetVisibleChildName("required")
 
@@ -223,13 +192,13 @@ func (window *Window) InitScreens() error {
 	if window.menu.screens[true], err = NewContentView(window); err != nil {
 		return err
 	}
-	window.menu.stack.AddTitled(window.menu.screens[ContentViewRequired].GetRootWidget(), "required", "Required options")
+	window.menu.stack.AddTitled(window.menu.screens[ContentViewRequired].GetRootWidget(), "required", "REQUIRED OPTIONS\nTakes approximately 2 minutes")
 
 	// Set up non required screen
 	if window.menu.screens[false], err = NewContentView(window); err != nil {
 		return err
 	}
-	window.menu.stack.AddTitled(window.menu.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "Advanced options")
+	window.menu.stack.AddTitled(window.menu.screens[ContentViewAdvanced].GetRootWidget(), "advanced", "ADVANCED OPTIONS\nCustomize setup")
 
 	return nil
 }
@@ -260,16 +229,14 @@ func (window *Window) CreateFooter() {
 	box.SetHAlign(gtk.ALIGN_FILL)
 
 	// Set up nav buttons
-	button, _ := gtk.ButtonNewWithLabel("Install")
+	button, _ := gtk.ButtonNewWithLabel("INSTALL")
 	button.SetHAlign(gtk.ALIGN_END)
-	button.SetRelief(gtk.RELIEF_NONE)
 	st, _ := button.GetStyleContext()
 	st.AddClass("suggested-action")
 	box.PackEnd(button, false, false, 2)
 
-	button, _ = gtk.ButtonNewWithLabel("Cancel")
+	button, _ = gtk.ButtonNewWithLabel("EXIT")
 	button.SetHAlign(gtk.ALIGN_END)
-	button.SetRelief(gtk.RELIEF_NONE)
 	box.PackEnd(button, false, false, 2)
 }
 
@@ -301,8 +268,4 @@ func (window *Window) ActivatePage(page pages.Page) {
 		// Set the root stack to show the new page
 		window.rootStack.SetVisibleChild(window.pages[id])
 	}
-
-	// Update title for display
-	window.title.label.SetLabel(page.GetSummary())
-	window.title.stack.SetVisibleChildName("title")
 }
