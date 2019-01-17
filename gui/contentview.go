@@ -38,7 +38,7 @@ func NewContentView(controller pages.Controller) (*ContentView, error) {
 	view.scroll.SetPolicy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
 	// Set shadow type
-	view.scroll.SetShadowType(gtk.SHADOW_ETCHED_IN)
+	view.scroll.SetShadowType(gtk.SHADOW_NONE)
 
 	// Set up the list
 	if view.list, err = gtk.ListBoxNew(); err != nil {

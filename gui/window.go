@@ -108,12 +108,19 @@ func NewWindow() (*Window, error) {
 	}
 	window.layout.PackStart(window.rootStack, true, true, 0)
 
+	// We want a visual separator as we're not using shadows
+	sep, err := gtk.SeparatorNew(gtk.ORIENTATION_HORIZONTAL)
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(sep, false, false, 0)
+
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
 	if err != nil {
 		return nil, err
 	}
-	window.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
+	window.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT)
 	window.switcher.SetStack(window.stack)
 
 	// Add menu stack to root stack
