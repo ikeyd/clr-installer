@@ -11,6 +11,9 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
+// PageConstructor is a typedef of the constructors for our pages
+type PageConstructor func() (pages.Page, error)
+
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
@@ -117,7 +120,23 @@ func NewWindow() (*Window, error) {
 	// Remove in future
 	window.UglyDemoCode()
 
-	// Show it
+	// Our pages
+	pageCreators := []PageConstructor{
+		pages.NewTimezonePage,
+		pages.NewLanguagePage,
+		pages.NewKeyboardPage,
+	}
+
+	// Create all pages
+	for _, f := range pageCreators {
+		page, err := f()
+		if err != nil {
+			return nil, err
+		}
+		window.AddPage(page)
+	}
+
+	// Show the whole window now
 	window.handle.ShowAll()
 
 	return window, nil
@@ -195,8 +214,4 @@ func (window *Window) UglyDemoCode() {
 	button.SetHAlign(gtk.ALIGN_END)
 	button.SetRelief(gtk.RELIEF_NONE)
 	box.PackEnd(button, false, false, 2)
-
-	window.AddPage(pages.NewTimezonePage())
-	window.AddPage(pages.NewLanguagePage())
-	window.AddPage(pages.NewKeyboardPage())
 }

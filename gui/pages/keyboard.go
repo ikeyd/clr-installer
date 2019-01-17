@@ -13,8 +13,8 @@ type Keyboard struct {
 }
 
 // NewKeyboardPage returns a new KeyboardPage
-func NewKeyboardPage() *Keyboard {
-	return &Keyboard{}
+func NewKeyboardPage() (Page, error) {
+	return &Keyboard{}, nil
 }
 
 // IsRequired will return true as we always need a Keyboard

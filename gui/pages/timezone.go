@@ -15,8 +15,14 @@ type Timezone struct {
 }
 
 // NewTimezonePage returns a new TimezonePage
-func NewTimezonePage() *Timezone {
-	return &Timezone{}
+func NewTimezonePage() (Page, error) {
+	tzones, err := timezone.Load()
+	if err != nil {
+		return nil, err
+	}
+	return &Timezone{
+		timezones: tzones,
+	}, nil
 }
 
 // IsRequired will return true as we always need a timezone

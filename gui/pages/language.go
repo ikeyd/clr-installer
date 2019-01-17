@@ -13,8 +13,8 @@ type Language struct {
 }
 
 // NewLanguagePage returns a new LanguagePage
-func NewLanguagePage() *Language {
-	return &Language{}
+func NewLanguagePage() (Page, error) {
+	return &Language{}, nil
 }
 
 // IsRequired will return true as we always need a Language
