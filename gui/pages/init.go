@@ -23,4 +23,5 @@ const (
 	PageIDTimezone = iota
 	PageIDLanguage = iota
 	PageIDKeyboard = iota
+	PageIDBundle   = iota
 )

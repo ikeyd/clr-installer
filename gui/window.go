@@ -125,6 +125,7 @@ func NewWindow() (*Window, error) {
 		pages.NewTimezonePage,
 		pages.NewLanguagePage,
 		pages.NewKeyboardPage,
+		pages.NewBundlePage,
 	}
 
 	// Create all pages
