@@ -33,6 +33,7 @@ func NewContentView(controller pages.Controller) (*ContentView, error) {
 	if view.scroll, err = gtk.ScrolledWindowNew(nil, nil); err != nil {
 		return nil, err
 	}
+	view.scroll.SetMarginTop(20)
 
 	// Set the scroll policy
 	view.scroll.SetPolicy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
