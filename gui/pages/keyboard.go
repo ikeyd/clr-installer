@@ -6,15 +6,23 @@ package pages
 
 import (
 	"github.com/gotk3/gotk3/gtk"
+	"github.com/clearlinux/clr-installer/keyboard"
 )
 
 // Keyboard is a simple page to help with Keyboard settings
 type Keyboard struct {
+	keymaps []*keyboard.Keymap
 }
 
 // NewKeyboardPage returns a new KeyboardPage
 func NewKeyboardPage() (Page, error) {
-	return &Keyboard{}, nil
+	keymaps, err := keyboard.LoadKeymaps()
+	if err != nil {
+		return nil, err
+	}
+	return &Keyboard{
+		keymaps: keymaps,
+	}, nil
 }
 
 // IsRequired will return true as we always need a Keyboard
