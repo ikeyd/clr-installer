@@ -44,12 +44,7 @@ func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 	if err != nil {
 		return nil, err
 	}
-	button.Connect("clicked", func() {
-		if switcher.stack == nil {
-			return
-		}
-		switcher.stack.SetVisibleChildName("required")
-	})
+	button.Connect("clicked", func() { switcher.switchTo("required") })
 
 	switcher.box.PackStart(button, true, true, 0)
 
@@ -58,15 +53,17 @@ func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 	if err != nil {
 		return nil, err
 	}
-	button.Connect("clicked", func() {
-		if switcher.stack == nil {
-			return
-		}
-		switcher.stack.SetVisibleChildName("advanced")
-	})
+	button.Connect("clicked", func() { switcher.switchTo("advanced") })
 	switcher.box.PackStart(button, true, true, 0)
 
 	return switcher, nil
+}
+
+func (switcher *Switcher) switchTo(id string) {
+	if switcher.stack == nil {
+		return
+	}
+	switcher.stack.SetVisibleChildName(id)
 }
 
 func createFancyButton(text string) (*gtk.Button, error) {
