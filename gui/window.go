@@ -28,6 +28,7 @@ type Window struct {
 	didInit bool // Whether we've inited the view animation
 
 	screens map[bool]*ContentView // Mapping to content views
+	pages map[int]gtk.IWidget // Mapping to each root page
 }
 
 // ConstructHeaderBar attempts creation of the headerbar
@@ -48,11 +49,14 @@ func (window *Window) ConstructHeaderBar() error {
 
 // NewWindow creates a new Window instance
 func NewWindow() (*Window, error) {
-	window := &Window{didInit: false}
 	var err error
 
-	// Set up screen mapping
-	window.screens = make(map[bool]*ContentView)
+	// Construct basic window
+	window := &Window{
+		didInit: false,
+		screens: make(map[bool]*ContentView),
+		pages: make(map[int]gtk.IWidget),
+	}
 
 	// Construct main window
 	window.handle, err = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
@@ -164,7 +168,14 @@ func (window *Window) InitScreens() error {
 
 // AddPage will add the page to the relevant screen
 func (window *Window) AddPage(page pages.Page) {
+	id := page.GetID()
+
+	// Add to the required or advanced(optional) screen
 	window.screens[page.IsRequired()].AddPage(page)
+
+	// Store root widget too
+	root := page.GetRootWidget()
+	window.pages[id] = root
 }
 
 func (window *Window) CreateFooter() {
@@ -216,4 +227,7 @@ func (window *Window) handleMap() {
 // ActivatePage will set the view as visible.
 func (window *Window) ActivatePage(page pages.Page) {
 	fmt.Println("Activating: " + page.GetTitle())
+
+	// Hide banner so we can get more room
+	window.banner.Hide()
 }
