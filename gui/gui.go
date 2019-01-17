@@ -7,6 +7,7 @@ package gui
 import (
 	"github.com/clearlinux/clr-installer/args"
 	"github.com/clearlinux/clr-installer/model"
+	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -50,6 +51,12 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 	if st, err := gtk.SettingsGetDefault(); err == nil {
 		st.SetProperty("gtk-application-prefer-dark-theme", true)
 	}
+
+	sc, _ := gtk.CssProviderNew()
+	myCSS := ".scroller-special { background-image: none; background-color: transparent; }"
+	sc.LoadFromData(myCSS)
+	screen, _ := gdk.ScreenGetDefault()
+	gtk.AddProviderForScreen(screen, sc, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 	// Construct main window
 	win, err := NewWindow()
