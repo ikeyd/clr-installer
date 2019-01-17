@@ -57,6 +57,7 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 .scroller-special {
 	background-image: none;
 	background-color: #414449;
+	color: #71C2E3;
 }
 window {
 	background-color: #414449;
@@ -64,7 +65,7 @@ window {
 .installer-welcome-banner {
 	background-color: transparent;
 	border: none;
-	background-image: url('/usr/share/backgrounds/clearlinux/wallpaper_4K_01.jpg');
+	background-image: url('/usr/share/backgrounds/clearlinux/color_logo_wire_2560x1440.png');
 }
 
 .invisible-titlebar {
