@@ -154,7 +154,7 @@ func NewWindow() (*Window, error) {
 	}
 
 	// Create footer area now
-	window.CreateFooter()
+	window.CreateFooter(vbox)
 
 	// Our pages
 	pageCreators := []PageConstructor{
@@ -224,14 +224,14 @@ func (window *Window) AddPage(page pages.Page) {
 	}
 }
 
-func (window *Window) CreateFooter() {
+func (window *Window) CreateFooter(store *gtk.Box) {
 	// Store components
 	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	box.SetMarginTop(4)
 	box.SetMarginBottom(6)
 	box.SetMarginEnd(6)
 	box.SetMarginStart(6)
-	window.layout.PackEnd(box, false, false, 0)
+	store.PackEnd(box, false, false, 0)
 	box.SetHAlign(gtk.ALIGN_FILL)
 
 	// Set up nav buttons
