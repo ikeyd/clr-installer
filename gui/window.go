@@ -27,7 +27,7 @@ type Window struct {
 	// Menus
 	menu struct {
 		stack    *gtk.Stack            // Menu switching
-		switcher *gtk.StackSwitcher    // Allow switching between main menu
+		switcher *Switcher             // Allow switching between main menu
 		screens  map[bool]*ContentView // Mapping to content views
 	}
 
@@ -94,12 +94,11 @@ func NewWindow() (*Window, error) {
 	window.handle.Add(window.layout)
 
 	// Set up the stack switcher
-	window.menu.switcher, err = gtk.StackSwitcherNew()
+	window.menu.switcher, err = NewSwitcher(nil)
 	if err != nil {
 		return nil, err
 	}
-	window.layout.PackStart(window.menu.switcher, false, false, 0)
-	window.menu.switcher.SetHAlign(gtk.ALIGN_END)
+	window.layout.PackStart(window.menu.switcher.GetRootWidget(), false, false, 0)
 
 	// To add the *main* content
 	window.contentLayout, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
