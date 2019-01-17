@@ -17,6 +17,7 @@ const (
 // Banner is used to add a nice banner widget to the front of the installer
 type Banner struct {
 	revealer *gtk.Revealer // For animations
+	ebox     *gtk.EventBox // To allow styling
 	box      *gtk.Box      // Main layout
 	img      *gtk.Image    // Our image widget
 	label    *gtk.Label    // Display label
@@ -27,17 +28,28 @@ func NewBanner() (*Banner, error) {
 	var err error
 	var pbuf *gdk.Pixbuf
 	banner := &Banner{}
+	var st *gtk.StyleContext
 
 	// Create the "holder" (revealer)
 	if banner.revealer, err = gtk.RevealerNew(); err != nil {
 		return nil, err
 	}
 
+	// Create eventbox for styling
+	if banner.ebox, err = gtk.EventBoxNew(); err != nil {
+		return nil, err
+	}
+	if st, err = banner.ebox.GetStyleContext(); err != nil {
+		return nil, err
+	}
+	st.AddClass("installer-welcome-banner")
+	banner.revealer.Add(banner.ebox)
+
 	// Create the root box
 	if banner.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0); err != nil {
 		return nil, err
 	}
-	banner.revealer.Add(banner.box)
+	banner.ebox.Add(banner.box)
 	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_CROSSFADE)
 
 	// Set the margins up
