@@ -33,15 +33,17 @@ func NewBanner() (*Banner, error) {
 	}
 
 	// Create the root box
-	if banner.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+	if banner.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0); err != nil {
 		return nil, err
 	}
 	banner.revealer.Add(banner.box)
 	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_CROSSFADE)
 
 	// Set the margins up
-	banner.box.SetMarginTop(24)
-	banner.box.SetMarginBottom(24)
+	banner.box.SetMarginTop(40)
+	banner.box.SetMarginBottom(40)
+	banner.box.SetMarginEnd(24)
+	banner.box.SetMarginStart(40)
 
 	// Construct the image
 	if banner.img, err = gtk.ImageNew(); err != nil {
@@ -52,20 +54,22 @@ func NewBanner() (*Banner, error) {
 	}
 	banner.img.SetFromPixbuf(pbuf)
 	banner.img.SetPixelSize(64)
-	banner.img.SetHAlign(gtk.ALIGN_START)
+	banner.img.SetMarginTop(12)
+	banner.img.SetMarginBottom(24)
+	banner.img.SetHAlign(gtk.ALIGN_CENTER)
+	banner.img.SetVAlign(gtk.ALIGN_CENTER)
 	banner.box.PackStart(banner.img, false, false, 0)
 	banner.box.SetHAlign(gtk.ALIGN_CENTER)
 
 	// Sort the label out
-	labelText := "<span font-size='xx-large'>Install Clear Linux* OS</span>\n\nTODO: Insert awesome header widget in this general region.\nKinda show off why this is an awesome decision."
+	labelText := "<span font-size='xx-large'>Welcome to\nClear Linux\nDesktop\nInstallation</span>"
 	if banner.label, err = gtk.LabelNew(labelText); err != nil {
 		return nil, err
 	}
 	banner.label.SetUseMarkup(true)
-	banner.label.SetMarginStart(40)
 	banner.label.SetHAlign(gtk.ALIGN_START)
 	banner.label.SetVAlign(gtk.ALIGN_CENTER)
-	banner.box.PackStart(banner.label, true, true, 0)
+	banner.box.PackStart(banner.label, false, false, 0)
 
 	return banner, nil
 }
@@ -84,14 +88,14 @@ func (banner *Banner) ShowFirst() {
 
 // Show will animate the banner into view, showing the content
 func (banner *Banner) Show() {
-	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_DOWN)
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_RIGHT)
 	banner.revealer.SetTransitionDuration(250)
 	banner.revealer.SetRevealChild(true)
 }
 
 // Hide will animate the banner out of view, hiding the content
 func (banner *Banner) Hide() {
-	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_UP)
+	banner.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_LEFT)
 	banner.revealer.SetTransitionDuration(250)
 	banner.revealer.SetRevealChild(false)
 }

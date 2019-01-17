@@ -18,10 +18,11 @@ type PageConstructor func() (pages.Page, error)
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
 type Window struct {
-	handle    *gtk.Window // Abstract the underlying GtkWindow
-	rootStack *gtk.Stack  // Root-level stack
-	layout    *gtk.Box    // Main layout (vertical)
-	banner    *Banner     // Top banner
+	handle        *gtk.Window // Abstract the underlying GtkWindow
+	rootStack     *gtk.Stack  // Root-level stack
+	layout        *gtk.Box    // Main layout (vertical)
+	contentLayout *gtk.Box    // content layout (horizontal)
+	banner        *Banner     // Top banner
 
 	// Wrap titlebar access
 	title struct {
@@ -108,7 +109,7 @@ func NewWindow() (*Window, error) {
 	// Set up basic window attributes
 	window.handle.SetTitle("Clear Linux* OS Installer [" + model.Version + "]")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
-	window.handle.SetDefaultSize(800, 600)
+	window.handle.SetDefaultSize(800, 500)
 	window.handle.SetResizable(false)
 	// Temporary icon: Need .desktop file + icon asset
 	window.handle.SetIconName("system-software-install")
@@ -120,11 +121,18 @@ func NewWindow() (*Window, error) {
 	}
 	window.handle.Add(window.layout)
 
+	// To add the *main* content
+	window.contentLayout, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	window.layout.PackStart(window.contentLayout, true, true, 0)
+
 	// Create the banner
 	if window.banner, err = NewBanner(); err != nil {
 		return nil, err
 	}
-	window.layout.PackStart(window.banner.GetRootWidget(), false, false, 0)
+	window.contentLayout.PackStart(window.banner.GetRootWidget(), false, false, 0)
 
 	// Set up the stack switcher
 	window.menu.switcher, err = gtk.StackSwitcherNew()
@@ -141,7 +149,7 @@ func NewWindow() (*Window, error) {
 	if err != nil {
 		return nil, err
 	}
-	window.layout.PackStart(window.rootStack, true, true, 0)
+	window.contentLayout.PackStart(window.rootStack, true, true, 0)
 
 	// We want a visual separator as we're not using shadows
 	sep, err := gtk.SeparatorNew(gtk.ORIENTATION_HORIZONTAL)
