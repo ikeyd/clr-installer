@@ -7,7 +7,6 @@ package gui
 import (
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/clearlinux/clr-installer/model"
-	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -21,8 +20,8 @@ type Window struct {
 	header   *gtk.HeaderBar     // Headerbar for navigation
 	stack    *gtk.Stack         // Hold primary switcher content
 	switcher *gtk.StackSwitcher // Allow switching between main components
-	top      *gtk.Box           // Top box for the main labels
 	layout   *gtk.Box           // Main layout (vertical)
+	banner   *gtk.Box           // Top banner
 
 	screens map[bool]*ContentView // Mapping to content views
 }
@@ -77,14 +76,11 @@ func NewWindow() (*Window, error) {
 	}
 	window.handle.Add(window.layout)
 
-	// Set up the top box
-	window.top, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	if err != nil {
+	// Create the banner
+	if window.banner, err = CreateBanner(); err != nil {
 		return nil, err
 	}
-	window.top.SetMarginTop(24)
-	window.top.SetMarginBottom(24)
-	window.layout.PackStart(window.top, false, false, 0)
+	window.layout.PackStart(window.banner, false, false, 0)
 
 	// Set up the stack switcher
 	window.switcher, err = gtk.StackSwitcherNew()
@@ -94,9 +90,6 @@ func NewWindow() (*Window, error) {
 
 	// Stick the switcher into the headerbar
 	window.header.SetCustomTitle(window.switcher)
-
-	// Create the header
-	window.CreateHeader()
 
 	// Set up the content stack
 	window.stack, err = gtk.StackNew()
@@ -165,25 +158,6 @@ func (window *Window) InitScreens() error {
 // AddPage will add the page to the relevant screen
 func (window *Window) AddPage(page pages.Page) {
 	window.screens[page.IsRequired()].AddPage(page)
-}
-
-// MakeHeader constructs the header component
-func (window *Window) CreateHeader() {
-	img, _ := gtk.ImageNew()
-	filePath := "themes/clr.png"
-	pbuf, _ := gdk.PixbufNewFromFileAtSize(filePath, 128, 128)
-	img.SetFromPixbuf(pbuf)
-	img.SetPixelSize(64)
-	img.SetHAlign(gtk.ALIGN_START)
-	window.top.PackStart(img, false, false, 0)
-	window.top.SetHAlign(gtk.ALIGN_CENTER)
-
-	label, _ := gtk.LabelNew("<span font-size='xx-large'>Install Clear Linux* OS</span>\n\nTODO: Insert awesome header widget in this general region.\nKinda show off why this is an awesome decision.")
-	label.SetUseMarkup(true)
-	label.SetMarginStart(40)
-	label.SetHAlign(gtk.ALIGN_START)
-	label.SetVAlign(gtk.ALIGN_CENTER)
-	window.top.PackStart(label, true, true, 0)
 }
 
 func (window *Window) CreateFooter() {

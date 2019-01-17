@@ -5,8 +5,8 @@
 package pages
 
 import (
-	"github.com/gotk3/gotk3/gtk"
 	"github.com/clearlinux/clr-installer/keyboard"
+	"github.com/gotk3/gotk3/gtk"
 )
 
 // Keyboard is a simple page to help with Keyboard settings
