@@ -257,6 +257,7 @@ func (window *Window) handleMap() {
 	glib.TimeoutAdd(200, func() bool {
 		if !window.didInit {
 			window.banner.ShowFirst()
+			window.menu.switcher.Show()
 			window.menu.stack.SetVisibleChildName("required")
 			window.didInit = true
 		}
@@ -270,6 +271,7 @@ func (window *Window) ActivatePage(page pages.Page) {
 
 	// Hide banner so we can get more room
 	window.banner.Hide()
+	window.menu.switcher.Hide()
 
 	id := page.GetID()
 	root := window.pages[id]

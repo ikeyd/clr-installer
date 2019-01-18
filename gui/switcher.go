@@ -10,8 +10,9 @@ import (
 
 // Switcher is used to switch between main installer sections
 type Switcher struct {
-	box   *gtk.Box   // Main layout
-	stack *gtk.Stack // Stack to control
+	revealer *gtk.Revealer // root widget
+	box      *gtk.Box      // Main layout
+	stack    *gtk.Stack    // Stack to control
 
 	buttons struct {
 		required *gtk.RadioButton
@@ -29,11 +30,19 @@ func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 		stack: stack,
 	}
 
+	// root revealer
+	switcher.revealer, err = gtk.RevealerNew()
+	if err != nil {
+		return nil, err
+	}
+	switcher.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_DOWN)
+
 	// Create main layout
 	switcher.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	if err != nil {
 		return nil, err
 	}
+	switcher.revealer.Add(switcher.box)
 
 	// Set styling
 	st, err = switcher.box.GetStyleContext()
@@ -91,10 +100,22 @@ func createFancyButton(text string) (*gtk.RadioButton, error) {
 
 // GetRootWidget returns the embeddable root widget
 func (switcher *Switcher) GetRootWidget() gtk.IWidget {
-	return switcher.box
+	return switcher.revealer
 }
 
 // SetStack updates the associated stack
 func (switcher *Switcher) SetStack(stack *gtk.Stack) {
 	switcher.stack = stack
+}
+
+// Show will tween in the switcher
+func (switcher *Switcher) Show() {
+	switcher.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_DOWN)
+	switcher.revealer.SetRevealChild(true)
+}
+
+// Hide will tween the switcher out
+func (switcher *Switcher) Hide() {
+	switcher.revealer.SetTransitionType(gtk.REVEALER_TRANSITION_TYPE_SLIDE_UP)
+	switcher.revealer.SetRevealChild(false)
 }
