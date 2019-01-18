@@ -61,6 +61,7 @@ func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) 
 }
 window {
 	background-color: #414449;
+	border: none;
 }
 .installer-welcome-banner {
 	background-color: transparent;
