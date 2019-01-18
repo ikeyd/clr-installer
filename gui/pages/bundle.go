@@ -7,6 +7,7 @@ package pages
 import (
 	"fmt"
 	"github.com/clearlinux/clr-installer/swupd"
+	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 	"os"
 	"path/filepath"
@@ -45,6 +46,62 @@ func LookupBundleIcon(bundle *swupd.Bundle) (string, bool) {
 		}
 	}
 	return "", false
+}
+
+// createBundleWidget creates new displayable widget for the given bundle
+func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
+	// Create the root layout
+	root, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	root.SetMarginTop(6)
+	root.SetMarginStart(12)
+
+	// Create display check
+	check, err := gtk.CheckButtonNew()
+	if err != nil {
+		return nil, err
+	}
+	root.PackStart(check, false, false, 0)
+
+	// Create display image
+	img, err := gtk.ImageNew()
+	img.SetMarginStart(6)
+	img.SetMarginEnd(6)
+	if err != nil {
+		return nil, err
+	}
+	icon, set := LookupBundleIcon(bundle)
+	if set {
+		pbuf, err := gdk.PixbufNewFromFileAtSize(icon, 48, 48)
+		if err != nil {
+			icon = ""
+			set = false
+		} else {
+			img.SetFromPixbuf(pbuf)
+		}
+	}
+
+	// Still not set? Fallback.
+	if !set {
+		img.SetFromIconName("package-x-generic", gtk.ICON_SIZE_INVALID)
+	}
+	img.SetPixelSize(48)
+	root.PackStart(img, false, false, 0)
+
+	txt := fmt.Sprintf("<b>%s</b>\n%s", bundle.Name, bundle.Desc)
+	label, err := gtk.LabelNew(txt)
+	if err != nil {
+		return nil, err
+	}
+	label.SetMarginStart(6)
+	label.SetMarginEnd(12)
+	label.SetXAlign(0.0)
+	root.PackStart(label, false, false, 0)
+	label.SetUseMarkup(true)
+
+	return root, nil
 }
 
 // NewBundlePage returns a new BundlePage
@@ -92,16 +149,11 @@ func NewBundlePage() (Page, error) {
 	bundle.box.PackStart(bundle.scroll, true, true, 0)
 
 	for _, b := range bundle.bundles {
-		lab := fmt.Sprintf("%s - %s", b.Name, b.Desc)
-		check, err := gtk.CheckButtonNewWithLabel(lab)
+		wid, err := createBundleWidget(b)
 		if err != nil {
 			return nil, err
 		}
-		icon, set := LookupBundleIcon(b)
-		if set {
-			fmt.Println(icon)
-		}
-		bundle.checks.PackStart(check, false, false, 0)
+		bundle.checks.PackStart(wid, false, false, 0)
 	}
 
 	return bundle, nil
