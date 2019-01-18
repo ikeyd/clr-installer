@@ -6,6 +6,7 @@ package pages
 
 import (
 	"github.com/clearlinux/clr-installer/model"
+	"github.com/clearlinux/clr-installer/storage"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -44,4 +45,9 @@ func (t *DiskConfig) GetTitle() string {
 }
 
 func (t *DiskConfig) StoreChanges(model *model.SystemInstall) {}
-func (t *DiskConfig) ResetChanges(model *model.SystemInstall) {}
+func (t *DiskConfig) ResetChanges(model *model.SystemInstall) {
+	store, _ := storage.RescanBlockDevices(model.TargetMedias)
+	for _, device := range store {
+		print(device.Name + " - " + device.FsType)
+	}
+}
