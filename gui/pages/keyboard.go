@@ -6,6 +6,7 @@ package pages
 
 import (
 	"github.com/clearlinux/clr-installer/keyboard"
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -50,5 +51,5 @@ func (t *Keyboard) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *Keyboard) StoreChanges() {}
-func (t *Keyboard) ResetChanges() {}
+func (t *Keyboard) StoreChanges(model *model.SystemInstall) {}
+func (t *Keyboard) ResetChanges(model *model.SystemInstall) {}

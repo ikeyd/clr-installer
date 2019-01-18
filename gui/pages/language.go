@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -42,5 +43,5 @@ func (t *Language) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *Language) StoreChanges() {}
-func (t *Language) ResetChanges() {}
+func (t *Language) StoreChanges(model *model.SystemInstall) {}
+func (t *Language) ResetChanges(model *model.SystemInstall) {}

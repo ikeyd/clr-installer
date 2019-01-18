@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -42,5 +43,5 @@ func (t *DiskConfig) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *DiskConfig) StoreChanges() {}
-func (t *DiskConfig) ResetChanges() {}
+func (t *DiskConfig) StoreChanges(model *model.SystemInstall) {}
+func (t *DiskConfig) ResetChanges(model *model.SystemInstall) {}

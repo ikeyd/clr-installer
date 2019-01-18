@@ -6,6 +6,7 @@ package pages
 
 import (
 	"fmt"
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/swupd"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
@@ -173,5 +174,5 @@ func (bundle *Bundle) GetTitle() string {
 	return "Select a bundle"
 }
 
-func (bundle *Bundle) StoreChanges() {}
-func (bundle *Bundle) ResetChanges() {}
+func (bundle *Bundle) StoreChanges(model *model.SystemInstall) {}
+func (bundle *Bundle) ResetChanges(model *model.SystemInstall) {}

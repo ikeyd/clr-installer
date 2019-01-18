@@ -114,7 +114,7 @@ window {
 	gtk.AddProviderForScreen(screen, sc, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 	// Construct main window
-	win, err := NewWindow()
+	win, err := NewWindow(gui.model)
 	if err != nil {
 		return gui.installReboot, err
 	}

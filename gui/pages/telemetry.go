@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/telemetry"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -65,5 +66,5 @@ func (t *Telemetry) GetTitle() string {
 	return telemetry.Title
 }
 
-func (t *Telemetry) StoreChanges() {}
-func (t *Telemetry) ResetChanges() {}
+func (t *Telemetry) StoreChanges(model *model.SystemInstall) {}
+func (t *Telemetry) ResetChanges(model *model.SystemInstall) {}

@@ -32,7 +32,8 @@ type Window struct {
 		currentPage pages.Page            // Pointer to the currently open page
 	}
 
-	// Buttons
+	// Buttons	"github.com/clearlinux/clr-installer/model"
+
 	buttons struct {
 		stack        *gtk.Stack // Storage for buttons
 		boxPrimary   *gtk.Box   // Storage for main buttons (install/quit)
@@ -44,9 +45,9 @@ type Window struct {
 		quit    *gtk.Button // Quit the installer
 	}
 
-	didInit bool // Whether we've inited the view animation
-
-	pages map[int]gtk.IWidget // Mapping to each root page
+	didInit bool                 // Whether we've inited the view animation
+	model   *model.SystemInstall // Our model
+	pages   map[int]gtk.IWidget  // Mapping to each root page
 }
 
 // ConstructHeaderBar attempts creation of the headerbar
@@ -71,13 +72,14 @@ func (window *Window) ConstructHeaderBar() error {
 }
 
 // NewWindow creates a new Window instance
-func NewWindow() (*Window, error) {
+func NewWindow(model *model.SystemInstall) (*Window, error) {
 	var err error
 
 	// Construct basic window
 	window := &Window{
 		didInit: false,
 		pages:   make(map[int]gtk.IWidget),
+		model:   model,
 	}
 	window.menu.screens = make(map[bool]*ContentView)
 
@@ -93,7 +95,7 @@ func NewWindow() (*Window, error) {
 	}
 
 	// Set up basic window attributes
-	window.handle.SetTitle("Clear Linux* OS Installer [" + model.Version + "]")
+	window.handle.SetTitle("Clear Linux* OS Installer")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 500)
 	window.handle.SetResizable(false)
@@ -374,9 +376,9 @@ func (window *Window) pageClosed(applied bool) {
 	// If applied, tell page to stash in model
 	// otherwise, reset from existing model
 	if applied {
-		window.menu.currentPage.ResetChanges()
+		window.menu.currentPage.ResetChanges(window.model)
 	} else {
-		window.menu.currentPage.StoreChanges()
+		window.menu.currentPage.StoreChanges(window.model)
 	}
 
 	// Reset currentPage

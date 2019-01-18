@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/timezone"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -51,5 +52,5 @@ func (t *Timezone) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *Timezone) StoreChanges() {}
-func (t *Timezone) ResetChanges() {}
+func (t *Timezone) StoreChanges(model *model.SystemInstall) {}
+func (t *Timezone) ResetChanges(model *model.SystemInstall) {}
