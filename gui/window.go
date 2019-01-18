@@ -158,12 +158,15 @@ func NewWindow() (*Window, error) {
 
 	// Our pages
 	pageCreators := []PageConstructor{
+		// required
 		pages.NewTimezonePage,
 		pages.NewLanguagePage,
 		pages.NewKeyboardPage,
-		pages.NewBundlePage,
-		pages.NewTelemetryPage,
 		pages.NewDiskConfigPage,
+		pages.NewTelemetryPage,
+
+		// advanced
+		pages.NewBundlePage,
 	}
 
 	// Create all pages
