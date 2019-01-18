@@ -55,15 +55,14 @@ func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
 	if err != nil {
 		return nil, err
 	}
-	root.SetMarginTop(6)
-	root.SetMarginStart(12)
 
 	// Create display check
 	check, err := gtk.CheckButtonNew()
 	if err != nil {
 		return nil, err
 	}
-	root.PackStart(check, false, false, 0)
+	check.SetMarginTop(6)
+	check.SetMarginStart(12)
 
 	// Create display image
 	img, err := gtk.ImageNew()
@@ -101,7 +100,8 @@ func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
 	root.PackStart(label, false, false, 0)
 	label.SetUseMarkup(true)
 
-	return root, nil
+	check.Add(root)
+	return check, nil
 }
 
 // NewBundlePage returns a new BundlePage
