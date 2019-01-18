@@ -107,6 +107,10 @@ window {
 	color: black;
 	border-radius: 1px;
 }
+.nav-button:disabled {
+	color: lighter(grey);
+	background-color: lighter(#5ECBF2);
+}
 `
 
 	sc.LoadFromData(customCSS)
