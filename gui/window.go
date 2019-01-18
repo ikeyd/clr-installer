@@ -95,7 +95,7 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 	}
 
 	// Set up basic window attributes
-	window.handle.SetTitle("Clear Linux* OS Installer")
+	window.handle.SetTitle("Clear Linux OS Installer")
 	window.handle.SetPosition(gtk.WIN_POS_CENTER)
 	window.handle.SetDefaultSize(800, 500)
 	window.handle.SetResizable(false)
