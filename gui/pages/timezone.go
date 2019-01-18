@@ -12,19 +12,21 @@ import (
 
 // Timezone is a simple page to help with timezone settings
 type Timezone struct {
-	model     *model.SystemInstall
-	timezones []*timezone.TimeZone
+	controller Controller
+	model      *model.SystemInstall
+	timezones  []*timezone.TimeZone
 }
 
 // NewTimezonePage returns a new TimezonePage
-func NewTimezonePage(model *model.SystemInstall) (Page, error) {
+func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, error) {
 	tzones, err := timezone.Load()
 	if err != nil {
 		return nil, err
 	}
 	return &Timezone{
-		model:     model,
-		timezones: tzones,
+		controller: controller,
+		model:      model,
+		timezones:  tzones,
 	}, nil
 }
 

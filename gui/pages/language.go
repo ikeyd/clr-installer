@@ -11,12 +11,16 @@ import (
 
 // Language is a simple page to help with Language settings
 type Language struct {
-	model *model.SystemInstall
+	controller Controller
+	model      *model.SystemInstall
 }
 
 // NewLanguagePage returns a new LanguagePage
-func NewLanguagePage(model *model.SystemInstall) (Page, error) {
-	return &Language{model: model}, nil
+func NewLanguagePage(controller Controller, model *model.SystemInstall) (Page, error) {
+	return &Language{
+		controller: controller,
+		model:      model,
+	}, nil
 }
 
 // IsRequired will return true as we always need a Language

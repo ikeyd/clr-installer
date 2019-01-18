@@ -30,11 +30,12 @@ var (
 
 // Bundle is a simple page to help with Bundle settings
 type Bundle struct {
-	model   *model.SystemInstall
-	bundles []*swupd.Bundle     // Known bundles
-	box     *gtk.Box            // Main layout
-	checks  *gtk.FlowBox        // Where to store checks
-	scroll  *gtk.ScrolledWindow // Scroll the checks
+	model      *model.SystemInstall
+	controller Controller
+	bundles    []*swupd.Bundle     // Known bundles
+	box        *gtk.Box            // Main layout
+	checks     *gtk.FlowBox        // Where to store checks
+	scroll     *gtk.ScrolledWindow // Scroll the checks
 }
 
 // LookupBundleIcon attempts to find the icon for the given bundle.
@@ -107,9 +108,12 @@ func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
 }
 
 // NewBundlePage returns a new BundlePage
-func NewBundlePage(model *model.SystemInstall) (Page, error) {
+func NewBundlePage(controller Controller, model *model.SystemInstall) (Page, error) {
 	var err error
-	bundle := &Bundle{model: model}
+	bundle := &Bundle{
+		controller: controller,
+		model:      model,
+	}
 
 	// Load our bundles
 	bundle.bundles, err = swupd.LoadBundleList()

@@ -12,19 +12,21 @@ import (
 
 // Keyboard is a simple page to help with Keyboard settings
 type Keyboard struct {
-	model   *model.SystemInstall
-	keymaps []*keyboard.Keymap
+	controller Controller
+	model      *model.SystemInstall
+	keymaps    []*keyboard.Keymap
 }
 
 // NewKeyboardPage returns a new KeyboardPage
-func NewKeyboardPage(model *model.SystemInstall) (Page, error) {
+func NewKeyboardPage(controller Controller, model *model.SystemInstall) (Page, error) {
 	keymaps, err := keyboard.LoadKeymaps()
 	if err != nil {
 		return nil, err
 	}
 	return &Keyboard{
-		model:   model,
-		keymaps: keymaps,
+		controller: controller,
+		model:      model,
+		keymaps:    keymaps,
 	}, nil
 }
 

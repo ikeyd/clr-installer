@@ -15,6 +15,7 @@ import (
 type DiskConfig struct {
 	devs       []*storage.BlockDevice
 	activeDisk *storage.BlockDevice
+	controller Controller
 	model      *model.SystemInstall
 	box        *gtk.Box
 	scroll     *gtk.ScrolledWindow
@@ -22,9 +23,10 @@ type DiskConfig struct {
 }
 
 // NewDiskConfigPage returns a new DiskConfigPage
-func NewDiskConfigPage(model *model.SystemInstall) (Page, error) {
+func NewDiskConfigPage(controller Controller, model *model.SystemInstall) (Page, error) {
 	disk := &DiskConfig{
-		model: model,
+		controller: controller,
+		model:      model,
 	}
 	var placeholder *gtk.Label
 
