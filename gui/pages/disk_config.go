@@ -125,8 +125,10 @@ func (disk *DiskConfig) buildList() error {
 func (disk *DiskConfig) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 	if row == nil {
 		disk.activeDisk = nil
+		disk.controller.SetButtonState(ButtonConfirm, false)
 		return
 	}
+	disk.controller.SetButtonState(ButtonConfirm, true)
 	idx := row.GetIndex()
 	disk.activeDisk = disk.devs[idx]
 	fmt.Println(disk.activeDisk.GetDeviceFile())
