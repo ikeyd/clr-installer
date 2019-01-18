@@ -236,7 +236,7 @@ func (window *Window) AddPage(page pages.Page) {
 	img.SetMarginEnd(12)
 	box2.PackStart(img, false, false, 0)
 
-	lab, _ := gtk.LabelNew("<big>" + page.GetSummary() + "</big>")
+	lab, _ := gtk.LabelNew("<big>" + page.GetTitle() + "</big>")
 	lab.SetUseMarkup(true)
 	box2.PackStart(lab, false, false, 0)
 	box.ShowAll()
