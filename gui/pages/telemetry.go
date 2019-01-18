@@ -12,6 +12,7 @@ import (
 // Telemetry is a simple page to help with Telemetry settings
 type Telemetry struct {
 	box *gtk.Box
+	sw  *gtk.CheckButton
 }
 
 // NewTelemetryPage returns a new TelemetryPage
@@ -20,6 +21,7 @@ func NewTelemetryPage() (Page, error) {
 	if err != nil {
 		return nil, err
 	}
+	box.SetVAlign(gtk.ALIGN_CENTER)
 
 	lab, err := gtk.LabelNew(telemetry.HelpMarkdown)
 	if err != nil {
@@ -28,7 +30,14 @@ func NewTelemetryPage() (Page, error) {
 	lab.SetUseMarkup(true)
 	box.PackStart(lab, false, false, 0)
 
-	return &Telemetry{box: box}, nil
+	sw, err := gtk.CheckButtonNewWithLabel("Enable telemetry")
+	if err != nil {
+		return nil, err
+	}
+	sw.SetHAlign(gtk.ALIGN_CENTER)
+	box.PackStart(sw, false, false, 0)
+
+	return &Telemetry{box: box, sw: sw}, nil
 }
 
 // IsRequired will return true as we always need a Telemetry
