@@ -218,10 +218,32 @@ func (window *Window) AddPage(page pages.Page) {
 
 	// Store root widget too
 	root := page.GetRootWidget()
-	window.pages[id] = root
-	if root != nil {
-		window.rootStack.AddNamed(root, "page:"+string(id))
+	if root == nil {
+		window.pages[id] = root
+		return
 	}
+
+	ebox, _ := gtk.EventBoxNew()
+	st, _ := ebox.GetStyleContext()
+	st.AddClass("installer-header-box")
+	box, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+
+	box2, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	box2.SetBorderWidth(6)
+	ebox.Add(box2)
+	box.PackStart(ebox, false, false, 0)
+	img, _ := gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_DIALOG)
+	img.SetMarginEnd(12)
+	box2.PackStart(img, false, false, 0)
+
+	lab, _ := gtk.LabelNew("<big>" + page.GetSummary() + "</big>")
+	lab.SetUseMarkup(true)
+	box2.PackStart(lab, false, false, 0)
+	box.ShowAll()
+
+	box.PackStart(root, true, true, 0)
+	window.pages[id] = box
+	window.rootStack.AddNamed(box, "page:"+string(id))
 }
 
 func (window *Window) CreateFooter(store *gtk.Box) {

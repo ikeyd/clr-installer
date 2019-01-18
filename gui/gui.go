@@ -74,6 +74,14 @@ window {
 	border: none;
 }
 
+.installer-header-box {
+	background-color: #272B2E;
+}
+
+.installer-header-box image {
+	color: #71C2E3;
+}
+
 .installer-switcher button {
 	background-image: none;
 	border-image: none;
