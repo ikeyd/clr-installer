@@ -95,7 +95,7 @@ window {
 }
 .nav-button {
 	background-color: #5ECBF2;
-	color: white;
+	color: black;
 	border-radius: 1px;
 }
 `
