@@ -233,8 +233,12 @@ func (window *Window) AddPage(page pages.Page) {
 	box2.SetBorderWidth(6)
 	ebox.Add(box2)
 	box.PackStart(ebox, false, false, 0)
-	img, _ := gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_DIALOG)
+	img, _ := gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_INVALID)
+	img.SetPixelSize(48)
+	img.SetMarginStart(6)
 	img.SetMarginEnd(12)
+	img.SetMarginTop(4)
+	img.SetMarginBottom(4)
 	box2.PackStart(img, false, false, 0)
 
 	lab, _ := gtk.LabelNew("<big>" + page.GetTitle() + "</big>")
