@@ -241,6 +241,9 @@ func (window *Window) CreateFooter(store *gtk.Box) {
 
 	// Set up nav buttons
 	button, _ = gtk.ButtonNewWithLabel("EXIT")
+	button.Connect("clicked", func() {
+		gtk.MainQuit()
+	})
 	button.SetHAlign(gtk.ALIGN_END)
 	st, _ = button.GetStyleContext()
 	st.AddClass("nav-button")
