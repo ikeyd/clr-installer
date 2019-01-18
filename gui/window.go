@@ -315,3 +315,8 @@ func (window *Window) ActivatePage(page pages.Page) {
 		window.rootStack.SetVisibleChild(window.pages[id])
 	}
 }
+
+// SetButtonState is called by the pages to enable/disable certain buttons.
+func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
+	// Do nothing for now because we have no extra buttons.
+}

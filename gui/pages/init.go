@@ -8,6 +8,23 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
+// Button allows us to flag up different buttons
+type Button uint
+
+const (
+	// ButtonInstall enables the Install button
+	ButtonInstall Button = 1 << iota
+
+	// ButtonQuit enables the quit button
+	ButtonQuit Button = 1 << iota
+
+	// ButtonCancel enables the cancel button
+	ButtonCancel Button = 1 << iota
+
+	// ButtonConfirm enables the confirm button
+	ButtonConfirm Button = 1 << iota
+)
+
 // Page interface provides a common definition that other
 // pages can share to give a standard interface for the
 // main controller, the Window
@@ -25,6 +42,7 @@ type Page interface {
 // over workflow.
 type Controller interface {
 	ActivatePage(Page)
+	SetButtonState(flags Button, enabled bool)
 }
 
 const (
