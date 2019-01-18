@@ -241,6 +241,7 @@ func (window *Window) AddPage(page pages.Page) {
 	lab.SetUseMarkup(true)
 	box2.PackStart(lab, false, false, 0)
 	box.ShowAll()
+	ebox.SetMarginBottom(6)
 
 	box.PackStart(root, true, true, 0)
 	window.pages[id] = box

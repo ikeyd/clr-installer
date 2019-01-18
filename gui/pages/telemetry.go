@@ -5,16 +5,30 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/telemetry"
 	"github.com/gotk3/gotk3/gtk"
 )
 
 // Telemetry is a simple page to help with Telemetry settings
 type Telemetry struct {
+	box *gtk.Box
 }
 
 // NewTelemetryPage returns a new TelemetryPage
 func NewTelemetryPage() (Page, error) {
-	return &Telemetry{}, nil
+	box, err := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	lab, err := gtk.LabelNew(telemetry.HelpMarkdown)
+	if err != nil {
+		return nil, err
+	}
+	lab.SetUseMarkup(true)
+	box.PackStart(lab, false, false, 0)
+
+	return &Telemetry{box: box}, nil
 }
 
 // IsRequired will return true as we always need a Telemetry
@@ -31,7 +45,7 @@ func (t *Telemetry) GetIcon() string {
 }
 
 func (t *Telemetry) GetRootWidget() gtk.IWidget {
-	return nil
+	return t.box
 }
 
 func (t *Telemetry) GetSummary() string {
@@ -39,5 +53,5 @@ func (t *Telemetry) GetSummary() string {
 }
 
 func (t *Telemetry) GetTitle() string {
-	return "Enable Telemetry"
+	return telemetry.Title
 }
