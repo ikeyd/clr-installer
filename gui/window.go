@@ -162,6 +162,7 @@ func NewWindow() (*Window, error) {
 		pages.NewLanguagePage,
 		pages.NewKeyboardPage,
 		pages.NewBundlePage,
+		pages.NewTelemetryPage,
 	}
 
 	// Create all pages
