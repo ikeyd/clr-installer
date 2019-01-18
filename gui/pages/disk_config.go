@@ -13,8 +13,11 @@ import (
 
 // DiskConfig is a simple page to help with DiskConfig settings
 type DiskConfig struct {
-	devs  []*storage.BlockDevice
-	model *model.SystemInstall
+	devs   []*storage.BlockDevice
+	model  *model.SystemInstall
+	box    *gtk.Box
+	scroll *gtk.ScrolledWindow
+	list   *gtk.ListBox
 }
 
 // NewDiskConfigPage returns a new DiskConfigPage
@@ -22,11 +25,44 @@ func NewDiskConfigPage(model *model.SystemInstall) (Page, error) {
 	disk := &DiskConfig{
 		model: model,
 	}
+	var placeholder *gtk.Label
+
 	devs, err := disk.buildDisks()
 	if err != nil {
 		return nil, err
 	}
 	disk.devs = devs
+
+	disk.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	disk.box.SetBorderWidth(8)
+
+	// Build storage for listbox
+	disk.scroll, err = gtk.ScrolledWindowNew(nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	disk.box.PackStart(disk.scroll, true, true, 0)
+	disk.scroll.SetPolicy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+
+	// Build listbox
+	disk.list, err = gtk.ListBoxNew()
+	if err != nil {
+		return nil, err
+	}
+	disk.scroll.Add(disk.list)
+
+	// Set placeholder
+	placeholder, err = gtk.LabelNew("No usable devices found")
+	if err != nil {
+		return nil, err
+	}
+
+	placeholder.ShowAll()
+	disk.list.SetPlaceholder(placeholder)
+
 	return disk, nil
 }
 
@@ -59,7 +95,7 @@ func (disk *DiskConfig) GetIcon() string {
 }
 
 func (disk *DiskConfig) GetRootWidget() gtk.IWidget {
-	return nil
+	return disk.box
 }
 
 func (disk *DiskConfig) GetSummary() string {
