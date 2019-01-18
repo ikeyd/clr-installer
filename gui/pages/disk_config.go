@@ -13,11 +13,12 @@ import (
 
 // DiskConfig is a simple page to help with DiskConfig settings
 type DiskConfig struct {
-	devs   []*storage.BlockDevice
-	model  *model.SystemInstall
-	box    *gtk.Box
-	scroll *gtk.ScrolledWindow
-	list   *gtk.ListBox
+	devs       []*storage.BlockDevice
+	activeDisk *storage.BlockDevice
+	model      *model.SystemInstall
+	box        *gtk.Box
+	scroll     *gtk.ScrolledWindow
+	list       *gtk.ListBox
 }
 
 // NewDiskConfigPage returns a new DiskConfigPage
@@ -52,6 +53,9 @@ func NewDiskConfigPage(model *model.SystemInstall) (Page, error) {
 	if err != nil {
 		return nil, err
 	}
+	disk.list.SetSelectionMode(gtk.SELECTION_SINGLE)
+	disk.list.SetActivateOnSingleClick(true)
+	disk.list.Connect("row-activated", disk.onRowActivated)
 	disk.scroll.Add(disk.list)
 	// Remove background
 	st, _ := disk.list.GetStyleContext()
@@ -113,6 +117,17 @@ func (disk *DiskConfig) buildList() error {
 		disk.list.Add(box)
 	}
 	return nil
+}
+
+// Set the right disk for installation
+func (disk *DiskConfig) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
+	if row == nil {
+		disk.activeDisk = nil
+		return
+	}
+	idx := row.GetIndex()
+	disk.activeDisk = disk.devs[idx]
+	fmt.Println(disk.activeDisk.GetDeviceFile())
 }
 
 // IsRequired will return true as we always need a DiskConfig
