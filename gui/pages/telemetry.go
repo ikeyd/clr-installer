@@ -50,7 +50,7 @@ func (t *Telemetry) GetID() int {
 }
 
 func (t *Telemetry) GetIcon() string {
-	return "web-browser"
+	return "network-transmit-receive"
 }
 
 func (t *Telemetry) GetRootWidget() gtk.IWidget {
