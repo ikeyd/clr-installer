@@ -75,8 +75,8 @@ func NewBanner() (*Banner, error) {
 	banner.box.SetHAlign(gtk.ALIGN_CENTER)
 
 	// Sort the label out
-	labelText := "<span font-size='xx-large'>Welcome to\nClear Linux\nDesktop\nInstallation</span>"
-	labelText += "\n\n<small>Version " + model.Version + "</small>"
+	labelText := "<span font-size='xx-large'>Welcome to\nClear Linux*\nDesktop\nInstallation</span>"
+	labelText += "\n\n<small>VERSION " + model.Version + "</small>"
 	if banner.label, err = gtk.LabelNew(labelText); err != nil {
 		return nil, err
 	}
