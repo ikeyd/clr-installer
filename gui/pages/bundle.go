@@ -180,4 +180,6 @@ func (bundle *Bundle) GetTitle() string {
 }
 
 func (bundle *Bundle) StoreChanges() {}
-func (bundle *Bundle) ResetChanges() {}
+func (bundle *Bundle) ResetChanges() {
+	bundle.controller.SetButtonState(ButtonConfirm, true)
+}

@@ -77,5 +77,6 @@ func (t *Telemetry) StoreChanges() {
 }
 
 func (t *Telemetry) ResetChanges() {
+	t.controller.SetButtonState(ButtonConfirm, true)
 	t.check.SetActive(t.model.IsTelemetryEnabled())
 }
