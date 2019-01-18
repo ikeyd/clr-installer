@@ -15,6 +15,9 @@ type Keyboard struct {
 	controller Controller
 	model      *model.SystemInstall
 	keymaps    []*keyboard.Keymap
+	box        *gtk.Box
+	scroll     *gtk.ScrolledWindow
+	list       *gtk.ListBox
 }
 
 // NewKeyboardPage returns a new KeyboardPage
@@ -23,11 +26,41 @@ func NewKeyboardPage(controller Controller, model *model.SystemInstall) (Page, e
 	if err != nil {
 		return nil, err
 	}
-	return &Keyboard{
+
+	keyboard := &Keyboard{
 		controller: controller,
 		model:      model,
 		keymaps:    keymaps,
-	}, nil
+	}
+
+	keyboard.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	keyboard.box.SetBorderWidth(8)
+
+	// Build storage for listbox
+	keyboard.scroll, err = gtk.ScrolledWindowNew(nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	keyboard.box.PackStart(keyboard.scroll, true, true, 0)
+	keyboard.scroll.SetPolicy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+
+	// Build listbox
+	keyboard.list, err = gtk.ListBoxNew()
+	if err != nil {
+		return nil, err
+	}
+	keyboard.list.SetSelectionMode(gtk.SELECTION_SINGLE)
+	keyboard.list.SetActivateOnSingleClick(true)
+	// keyboard.list.Connect("row-activated", keyboard.onRowActivated)
+	keyboard.scroll.Add(keyboard.list)
+	// Remove background
+	st, _ := keyboard.list.GetStyleContext()
+	st.AddClass("scroller-special")
+
+	return keyboard, nil
 }
 
 // IsRequired will return true as we always need a Keyboard
@@ -44,7 +77,7 @@ func (t *Keyboard) GetIcon() string {
 }
 
 func (t *Keyboard) GetRootWidget() gtk.IWidget {
-	return nil
+	return t.box
 }
 
 func (t *Keyboard) GetSummary() string {
