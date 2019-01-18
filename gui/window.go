@@ -330,11 +330,13 @@ func (window *Window) CreateFooter(store *gtk.Box) error {
 	if window.buttons.confirm, err = createNavButton("CONFIRM"); err != nil {
 		return err
 	}
+	window.buttons.confirm.Connect("clicked", func() { window.pageClosed(true) })
 
 	// Cancel button
 	if window.buttons.cancel, err = createNavButton("CANCEL"); err != nil {
 		return err
 	}
+	window.buttons.cancel.Connect("clicked", func() { window.pageClosed(false) })
 
 	// Pack the buttons
 	window.buttons.boxPrimary.PackEnd(window.buttons.install, false, false, 4)
@@ -363,6 +365,21 @@ func (window *Window) handleMap() {
 		}
 		return false
 	})
+}
+
+// pageClosed handles closure of a page. We're interested in whether
+// the change was "applied" or not.
+func (window *Window) pageClosed(applied bool) {
+	// For now, ignore "applied"
+	window.rootStack.SetVisibleChildName("menu")
+	window.banner.Show()
+	window.menu.switcher.Show()
+
+	// Show primary controls
+	window.buttons.stack.SetVisibleChildName("primary")
+
+	// TODO: if applied, tell page to stash in model
+	// otherwise, reset from existing model
 }
 
 // ActivatePage will set the view as visible.
