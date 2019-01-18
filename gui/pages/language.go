@@ -37,3 +37,7 @@ func (t *Language) GetRootWidget() gtk.IWidget {
 func (t *Language) GetSummary() string {
 	return "Choose Language"
 }
+
+func (t *Language) GetTitle() string {
+	return t.GetSummary()
+}

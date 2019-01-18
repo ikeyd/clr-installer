@@ -15,6 +15,7 @@ type Page interface {
 	IsRequired() bool
 	GetID() int
 	GetSummary() string
+	GetTitle() string
 	GetIcon() string
 	GetRootWidget() gtk.IWidget
 }
