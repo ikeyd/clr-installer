@@ -33,7 +33,10 @@ type Window struct {
 
 	// Buttons
 	buttons struct {
-		box     *gtk.Box    // Storage for buttons
+		stack     *gtk.Stack    // Storage for buttons
+		boxPrimary *gtk.Box // Storage for main buttons (install/quit)
+		boxSecondary *gtk.Box // Storage for secondary buttons (confirm/cancel)
+
 		confirm *gtk.Button // Apply changes
 		cancel  *gtk.Button // Cancel changes
 		install *gtk.Button // Install Clear Linux
@@ -287,18 +290,23 @@ func createNavButton(label string) (*gtk.Button, error) {
 func (window *Window) CreateFooter(store *gtk.Box) error {
 	var err error
 
-	// Create box for buttons
-	if window.buttons.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+	// Create stack for buttons
+	if window.buttons.stack, err = gtk.StackNew(); err != nil {
 		return err
 	}
 
 	// Set alignment up
-	window.buttons.box.SetMarginTop(4)
-	window.buttons.box.SetMarginBottom(6)
-	window.buttons.box.SetMarginEnd(24)
-	window.buttons.box.SetHAlign(gtk.ALIGN_END)
+	window.buttons.stack.SetMarginTop(4)
+	window.buttons.stack.SetMarginBottom(6)
+	window.buttons.stack.SetMarginEnd(24)
+	window.buttons.stack.SetHAlign(gtk.ALIGN_END)
+	window.buttons.stack.SetTransitionType(gtk.STACK_TRANSITION_TYPE_CROSSFADE)
+	store.PackEnd(window.buttons.stack, false, false, 0)
 
-	store.PackEnd(window.buttons.box, false, false, 0)
+	// Create box for primary buttons
+	if window.buttons.boxPrimary, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+		return err
+	}
 
 	// Install button
 	if window.buttons.install, err = createNavButton("INSTALL"); err != nil {
@@ -313,6 +321,11 @@ func (window *Window) CreateFooter(store *gtk.Box) error {
 		gtk.MainQuit()
 	})
 
+	// Create box for secondary buttons
+	if window.buttons.boxSecondary, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+		return err
+	}
+
 	// Confirm button
 	if window.buttons.confirm, err = createNavButton("CONFIRM"); err != nil {
 		return err
@@ -324,10 +337,15 @@ func (window *Window) CreateFooter(store *gtk.Box) error {
 	}
 
 	// Pack the buttons
-	window.buttons.box.PackEnd(window.buttons.install, false, false, 4)
-	window.buttons.box.PackEnd(window.buttons.quit, false, false, 4)
-	window.buttons.box.PackEnd(window.buttons.confirm, false, false, 4)
-	window.buttons.box.PackEnd(window.buttons.cancel, false, false, 4)
+	window.buttons.boxPrimary.PackEnd(window.buttons.install, false, false, 4)
+	window.buttons.boxPrimary.PackEnd(window.buttons.quit, false, false, 4)
+	window.buttons.boxSecondary.PackEnd(window.buttons.confirm, false, false, 4)
+	window.buttons.boxSecondary.PackEnd(window.buttons.cancel, false, false, 4)
+
+	// Add the boxes
+	window.buttons.stack.AddNamed(window.buttons.boxPrimary, "primary")
+	window.buttons.stack.AddNamed(window.buttons.boxSecondary, "secondary")
+
 	return nil
 }
 
@@ -355,6 +373,9 @@ func (window *Window) ActivatePage(page pages.Page) {
 	window.banner.Hide()
 	window.menu.switcher.Hide()
 
+	// Show secondary controls
+	window.buttons.stack.SetVisibleChildName("secondary")
+
 	id := page.GetID()
 	root := window.pages[id]
 	if root != nil {
@@ -365,5 +386,10 @@ func (window *Window) ActivatePage(page pages.Page) {
 
 // SetButtonState is called by the pages to enable/disable certain buttons.
 func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
-	// Do nothing for now because we have no extra buttons.
+	if flags&pages.ButtonCancel==pages.ButtonCancel {
+		window.buttons.cancel.SetSensitive(enabled)
+	}
+	if flags&pages.ButtonConfirm==pages.ButtonConfirm {
+		window.buttons.confirm.SetSensitive(enabled)
+	}
 }

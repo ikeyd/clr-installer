@@ -12,12 +12,6 @@ import (
 type Button uint
 
 const (
-	// ButtonInstall enables the Install button
-	ButtonInstall Button = 1 << iota
-
-	// ButtonQuit enables the quit button
-	ButtonQuit Button = 1 << iota
-
 	// ButtonCancel enables the cancel button
 	ButtonCancel Button = 1 << iota
 
