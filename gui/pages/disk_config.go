@@ -41,3 +41,6 @@ func (t *DiskConfig) GetSummary() string {
 func (t *DiskConfig) GetTitle() string {
 	return t.GetSummary()
 }
+
+func (t *DiskConfig) StoreChanges() {}
+func (t *DiskConfig) ResetChanges() {}

@@ -172,3 +172,6 @@ func (bundle *Bundle) GetSummary() string {
 func (bundle *Bundle) GetTitle() string {
 	return "Select a bundle"
 }
+
+func (bundle *Bundle) StoreChanges() {}
+func (bundle *Bundle) ResetChanges() {}

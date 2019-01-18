@@ -26,9 +26,10 @@ type Window struct {
 
 	// Menus
 	menu struct {
-		stack    *gtk.Stack            // Menu switching
-		switcher *Switcher             // Allow switching between main menu
-		screens  map[bool]*ContentView // Mapping to content views
+		stack       *gtk.Stack            // Menu switching
+		switcher    *Switcher             // Allow switching between main menu
+		screens     map[bool]*ContentView // Mapping to content views
+		currentPage pages.Page            // Pointer to the currently open page
 	}
 
 	// Buttons
@@ -370,21 +371,28 @@ func (window *Window) handleMap() {
 // pageClosed handles closure of a page. We're interested in whether
 // the change was "applied" or not.
 func (window *Window) pageClosed(applied bool) {
-	// For now, ignore "applied"
+	// If applied, tell page to stash in model
+	// otherwise, reset from existing model
+	if applied {
+		window.menu.currentPage.ResetChanges()
+	} else {
+		window.menu.currentPage.StoreChanges()
+	}
+
+	// Reset currentPage
+	window.menu.currentPage = nil
+
+	// Switch UI back to primary view
 	window.rootStack.SetVisibleChildName("menu")
 	window.banner.Show()
 	window.menu.switcher.Show()
-
-	// Show primary controls
 	window.buttons.stack.SetVisibleChildName("primary")
-
-	// TODO: if applied, tell page to stash in model
-	// otherwise, reset from existing model
 }
 
 // ActivatePage will set the view as visible.
 func (window *Window) ActivatePage(page pages.Page) {
 	fmt.Println("Activating: " + page.GetSummary())
+	window.menu.currentPage = page
 
 	// Hide banner so we can get more room
 	window.banner.Hide()

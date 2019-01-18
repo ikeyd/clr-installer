@@ -50,3 +50,6 @@ func (t *Timezone) GetSummary() string {
 func (t *Timezone) GetTitle() string {
 	return t.GetSummary()
 }
+
+func (t *Timezone) StoreChanges() {}
+func (t *Timezone) ResetChanges() {}

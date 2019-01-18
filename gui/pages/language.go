@@ -41,3 +41,6 @@ func (t *Language) GetSummary() string {
 func (t *Language) GetTitle() string {
 	return t.GetSummary()
 }
+
+func (t *Language) StoreChanges() {}
+func (t *Language) ResetChanges() {}

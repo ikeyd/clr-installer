@@ -49,3 +49,6 @@ func (t *Keyboard) GetSummary() string {
 func (t *Keyboard) GetTitle() string {
 	return t.GetSummary()
 }
+
+func (t *Keyboard) StoreChanges() {}
+func (t *Keyboard) ResetChanges() {}

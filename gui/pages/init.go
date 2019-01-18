@@ -29,6 +29,8 @@ type Page interface {
 	GetTitle() string
 	GetIcon() string
 	GetRootWidget() gtk.IWidget
+	StoreChanges() // Store changes in the model
+	ResetChanges() // Reset data to model
 }
 
 // PageController is implemented by the Window struct, and

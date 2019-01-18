@@ -64,3 +64,6 @@ func (t *Telemetry) GetSummary() string {
 func (t *Telemetry) GetTitle() string {
 	return telemetry.Title
 }
+
+func (t *Telemetry) StoreChanges() {}
+func (t *Telemetry) ResetChanges() {}
