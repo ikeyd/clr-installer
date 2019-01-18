@@ -30,6 +30,7 @@ var (
 
 // Bundle is a simple page to help with Bundle settings
 type Bundle struct {
+	model   *model.SystemInstall
 	bundles []*swupd.Bundle     // Known bundles
 	box     *gtk.Box            // Main layout
 	checks  *gtk.FlowBox        // Where to store checks
@@ -106,9 +107,9 @@ func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
 }
 
 // NewBundlePage returns a new BundlePage
-func NewBundlePage() (Page, error) {
+func NewBundlePage(model *model.SystemInstall) (Page, error) {
 	var err error
-	bundle := &Bundle{}
+	bundle := &Bundle{model: model}
 
 	// Load our bundles
 	bundle.bundles, err = swupd.LoadBundleList()
@@ -174,5 +175,5 @@ func (bundle *Bundle) GetTitle() string {
 	return "Select a bundle"
 }
 
-func (bundle *Bundle) StoreChanges(model *model.SystemInstall) {}
-func (bundle *Bundle) ResetChanges(model *model.SystemInstall) {}
+func (bundle *Bundle) StoreChanges() {}
+func (bundle *Bundle) ResetChanges() {}

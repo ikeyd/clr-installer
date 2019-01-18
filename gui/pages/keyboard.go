@@ -12,16 +12,18 @@ import (
 
 // Keyboard is a simple page to help with Keyboard settings
 type Keyboard struct {
+	model   *model.SystemInstall
 	keymaps []*keyboard.Keymap
 }
 
 // NewKeyboardPage returns a new KeyboardPage
-func NewKeyboardPage() (Page, error) {
+func NewKeyboardPage(model *model.SystemInstall) (Page, error) {
 	keymaps, err := keyboard.LoadKeymaps()
 	if err != nil {
 		return nil, err
 	}
 	return &Keyboard{
+		model:   model,
 		keymaps: keymaps,
 	}, nil
 }
@@ -51,5 +53,5 @@ func (t *Keyboard) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *Keyboard) StoreChanges(model *model.SystemInstall) {}
-func (t *Keyboard) ResetChanges(model *model.SystemInstall) {}
+func (t *Keyboard) StoreChanges() {}
+func (t *Keyboard) ResetChanges() {}

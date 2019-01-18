@@ -12,11 +12,12 @@ import (
 
 // DiskConfig is a simple page to help with DiskConfig settings
 type DiskConfig struct {
+	model *model.SystemInstall
 }
 
 // NewDiskConfigPage returns a new DiskConfigPage
-func NewDiskConfigPage() (Page, error) {
-	return &DiskConfig{}, nil
+func NewDiskConfigPage(model *model.SystemInstall) (Page, error) {
+	return &DiskConfig{model: model}, nil
 }
 
 // IsRequired will return true as we always need a DiskConfig
@@ -44,9 +45,9 @@ func (t *DiskConfig) GetTitle() string {
 	return t.GetSummary() + " - WARNING: SUPER EXPERIMENTAL"
 }
 
-func (t *DiskConfig) StoreChanges(model *model.SystemInstall) {}
-func (t *DiskConfig) ResetChanges(model *model.SystemInstall) {
-	store, _ := storage.RescanBlockDevices(model.TargetMedias)
+func (t *DiskConfig) StoreChanges() {}
+func (t *DiskConfig) ResetChanges() {
+	store, _ := storage.RescanBlockDevices(t.model.TargetMedias)
 	for _, device := range store {
 		print(device.Name + " - " + device.FsType)
 	}

@@ -12,12 +12,13 @@ import (
 
 // Telemetry is a simple page to help with Telemetry settings
 type Telemetry struct {
+	model *model.SystemInstall
 	box   *gtk.Box
 	check *gtk.CheckButton
 }
 
 // NewTelemetryPage returns a new TelemetryPage
-func NewTelemetryPage() (Page, error) {
+func NewTelemetryPage(model *model.SystemInstall) (Page, error) {
 	box, err := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,7 @@ func NewTelemetryPage() (Page, error) {
 	check.SetHAlign(gtk.ALIGN_CENTER)
 	box.PackStart(check, false, false, 0)
 
-	return &Telemetry{box: box, check: check}, nil
+	return &Telemetry{model: model, box: box, check: check}, nil
 }
 
 // IsRequired will return true as we always need a Telemetry
@@ -66,10 +67,10 @@ func (t *Telemetry) GetTitle() string {
 	return telemetry.Title
 }
 
-func (t *Telemetry) StoreChanges(model *model.SystemInstall) {
-	model.EnableTelemetry(t.check.GetActive())
+func (t *Telemetry) StoreChanges() {
+	t.model.EnableTelemetry(t.check.GetActive())
 }
 
-func (t *Telemetry) ResetChanges(model *model.SystemInstall) {
-	t.check.SetActive(model.IsTelemetryEnabled())
+func (t *Telemetry) ResetChanges() {
+	t.check.SetActive(t.model.IsTelemetryEnabled())
 }

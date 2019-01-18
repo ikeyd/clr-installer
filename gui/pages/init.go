@@ -5,7 +5,6 @@
 package pages
 
 import (
-	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -30,8 +29,8 @@ type Page interface {
 	GetTitle() string
 	GetIcon() string
 	GetRootWidget() gtk.IWidget
-	StoreChanges(*model.SystemInstall) // Store changes in the model
-	ResetChanges(*model.SystemInstall) // Reset data to model
+	StoreChanges() // Store changes in the model
+	ResetChanges() // Reset data to model
 }
 
 // PageController is implemented by the Window struct, and

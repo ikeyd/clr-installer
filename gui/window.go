@@ -13,7 +13,7 @@ import (
 )
 
 // PageConstructor is a typedef of the constructors for our pages
-type PageConstructor func() (pages.Page, error)
+type PageConstructor func(model *model.SystemInstall) (pages.Page, error)
 
 // Window provides management of the underlying GtkWindow and
 // associated windows to provide a level of OOP abstraction.
@@ -188,7 +188,7 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 
 	// Create all pages
 	for _, f := range pageCreators {
-		page, err := f()
+		page, err := f(window.model)
 		if err != nil {
 			return nil, err
 		}
@@ -376,9 +376,9 @@ func (window *Window) pageClosed(applied bool) {
 	// If applied, tell page to stash in model
 	// otherwise, reset from existing model
 	if applied {
-		window.menu.currentPage.StoreChanges(window.model)
+		window.menu.currentPage.StoreChanges()
 	} else {
-		window.menu.currentPage.ResetChanges(window.model)
+		window.menu.currentPage.ResetChanges()
 	}
 
 	// Reset currentPage
