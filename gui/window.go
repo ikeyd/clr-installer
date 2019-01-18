@@ -31,6 +31,15 @@ type Window struct {
 		screens  map[bool]*ContentView // Mapping to content views
 	}
 
+	// Buttons
+	buttons struct {
+		box     *gtk.Box    // Storage for buttons
+		confirm *gtk.Button // Apply changes
+		cancel  *gtk.Button // Cancel changes
+		install *gtk.Button // Install Clear Linux
+		quit    *gtk.Button // Quit the installer
+	}
+
 	didInit bool // Whether we've inited the view animation
 
 	pages map[int]gtk.IWidget // Mapping to each root page
@@ -154,7 +163,9 @@ func NewWindow() (*Window, error) {
 	}
 
 	// Create footer area now
-	window.CreateFooter(vbox)
+	if err = window.CreateFooter(vbox); err != nil {
+		return nil, err
+	}
 
 	// Our pages
 	pageCreators := []PageConstructor{
@@ -256,32 +267,68 @@ func (window *Window) AddPage(page pages.Page) {
 	window.rootStack.AddNamed(box, "page:"+string(id))
 }
 
-func (window *Window) CreateFooter(store *gtk.Box) {
-	// Store components
-	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	box.SetMarginTop(4)
-	box.SetMarginBottom(6)
-	box.SetMarginEnd(6)
-	store.PackEnd(box, false, false, 0)
-	box.SetHAlign(gtk.ALIGN_END)
+// createNavButton creates specialised navigation button
+func createNavButton(label string) (*gtk.Button, error) {
+	var st *gtk.StyleContext
+	button, err := gtk.ButtonNewWithLabel(label)
+	if err != nil {
+		return nil, err
+	}
 
-	button, _ := gtk.ButtonNewWithLabel("INSTALL")
-	st, _ := button.GetStyleContext()
+	st, err = button.GetStyleContext()
+	if err != nil {
+		return nil, err
+	}
 	st.AddClass("nav-button")
-	button.SetHAlign(gtk.ALIGN_END)
-	box.PackEnd(button, false, false, 4)
+	return button, nil
+}
 
-	// Set up nav buttons
-	button, _ = gtk.ButtonNewWithLabel("EXIT")
-	button.Connect("clicked", func() {
+// CreateFooter creates our navigation footer area
+func (window *Window) CreateFooter(store *gtk.Box) error {
+	var err error
+
+	// Create box for buttons
+	if window.buttons.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0); err != nil {
+		return err
+	}
+
+	// Set alignment up
+	window.buttons.box.SetMarginTop(4)
+	window.buttons.box.SetMarginBottom(6)
+	window.buttons.box.SetMarginEnd(24)
+	window.buttons.box.SetHAlign(gtk.ALIGN_END)
+
+	store.PackEnd(window.buttons.box, false, false, 0)
+
+	// Install button
+	if window.buttons.install, err = createNavButton("INSTALL"); err != nil {
+		return err
+	}
+
+	// Exit button
+	if window.buttons.quit, err = createNavButton("EXIT"); err != nil {
+		return err
+	}
+	window.buttons.quit.Connect("clicked", func() {
 		gtk.MainQuit()
 	})
-	button.SetHAlign(gtk.ALIGN_END)
-	st, _ = button.GetStyleContext()
-	st.AddClass("nav-button")
-	box.PackEnd(button, false, false, 4)
 
-	box.SetMarginEnd(24)
+	// Confirm button
+	if window.buttons.confirm, err = createNavButton("CONFIRM"); err != nil {
+		return err
+	}
+
+	// Cancel button
+	if window.buttons.cancel, err = createNavButton("CANCEL"); err != nil {
+		return err
+	}
+
+	// Pack the buttons
+	window.buttons.box.PackEnd(window.buttons.install, false, false, 4)
+	window.buttons.box.PackEnd(window.buttons.quit, false, false, 4)
+	window.buttons.box.PackEnd(window.buttons.confirm, false, false, 4)
+	window.buttons.box.PackEnd(window.buttons.cancel, false, false, 4)
+	return nil
 }
 
 // We've been mapped on screen
