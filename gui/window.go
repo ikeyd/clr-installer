@@ -272,7 +272,8 @@ func (window *Window) handleMap() {
 func (window *Window) ActivatePage(page pages.Page) {
 	fmt.Println("Activating: " + page.GetSummary())
 
-	// Hide switcher so we can get more room
+	// Hide banner so we can get more room
+	window.banner.Hide()
 	window.menu.switcher.Hide()
 
 	id := page.GetID()
