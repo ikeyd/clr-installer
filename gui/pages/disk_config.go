@@ -66,6 +66,10 @@ func NewDiskConfigPage(model *model.SystemInstall) (Page, error) {
 	placeholder.ShowAll()
 	disk.list.SetPlaceholder(placeholder)
 
+	if err = disk.buildList(); err != nil {
+		return nil, err
+	}
+
 	return disk, nil
 }
 
@@ -75,13 +79,40 @@ func (disk *DiskConfig) buildDisks() ([]*storage.BlockDevice, error) {
 	for _, device := range devices {
 		storage.NewStandardPartitions(device)
 	}
-	for _, device := range devices {
-		fmt.Println(device.GetDeviceFile())
-		for _, device := range device.Children {
-			fmt.Println("\t" + device.GetDeviceFile() + " - " + device.FsType)
-		}
-	}
 	return devices, err
+}
+
+// buildList populates the ListBox with usable widget things
+func (disk *DiskConfig) buildList() error {
+	for _, device := range disk.devs {
+		box, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+		if err != nil {
+			return err
+		}
+		img, err := gtk.ImageNewFromIconName("drive-harddisk-system-symbolic", gtk.ICON_SIZE_DIALOG)
+		if err != nil {
+			return err
+		}
+		img.SetMarginEnd(12)
+		img.SetMarginStart(12)
+		box.PackStart(img, false, false, 0)
+		text := fmt.Sprintf("<big>Wipe all data on: <b>%s</b></big>\n", device.GetDeviceFile())
+		for _, child := range device.Children {
+			text += fmt.Sprintf(" - Create partition <b>%s</b> with type <b>%s</b> (%s)\n", child.GetDeviceFile(), child.FsType, child.Label)
+		}
+
+		label, err := gtk.LabelNew(text)
+		if err != nil {
+			return err
+		}
+		label.SetXAlign(0.0)
+		label.SetHAlign(gtk.ALIGN_START)
+		label.SetUseMarkup(true)
+		box.PackStart(label, false, false, 0)
+		box.ShowAll()
+		disk.list.Add(box)
+	}
+	return nil
 }
 
 // IsRequired will return true as we always need a DiskConfig
