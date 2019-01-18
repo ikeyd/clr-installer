@@ -8,6 +8,22 @@ import (
 	"fmt"
 	"github.com/clearlinux/clr-installer/swupd"
 	"github.com/gotk3/gotk3/gtk"
+	"os"
+	"path/filepath"
+)
+
+const (
+	// IconDirectory is where we can find bundle icons
+	IconDirectory = "/usr/share/clear/bundle-icons"
+)
+
+var (
+	// IconSuffixes is the supported set of suffixes for the
+	// current Clear Bundles
+	IconSuffixes = []string{
+		".svg",
+		".png",
+	}
 )
 
 // Bundle is a simple page to help with Bundle settings
@@ -16,6 +32,19 @@ type Bundle struct {
 	box     *gtk.Box            // Main layout
 	checks  *gtk.Box            // Where to store checks
 	scroll  *gtk.ScrolledWindow // Scroll the checks
+}
+
+// LookupBundleIcon attempts to find the icon for the given bundle.
+// If it is found, we'll return true and the icon path, otherwise
+// we'll return false with an empty string.
+func LookupBundleIcon(bundle *swupd.Bundle) (string, bool) {
+	for _, suffix := range IconSuffixes {
+		path := filepath.Join(IconDirectory, fmt.Sprintf("%s%s", bundle.Name, suffix))
+		if _, err := os.Stat(path); err == nil {
+			return path, true
+		}
+	}
+	return "", false
 }
 
 // NewBundlePage returns a new BundlePage
@@ -67,6 +96,10 @@ func NewBundlePage() (Page, error) {
 		check, err := gtk.CheckButtonNewWithLabel(lab)
 		if err != nil {
 			return nil, err
+		}
+		icon, set := LookupBundleIcon(b)
+		if set {
+			fmt.Println(icon)
 		}
 		bundle.checks.PackStart(check, false, false, 0)
 	}
