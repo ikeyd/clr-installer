@@ -376,9 +376,9 @@ func (window *Window) pageClosed(applied bool) {
 	// If applied, tell page to stash in model
 	// otherwise, reset from existing model
 	if applied {
-		window.menu.currentPage.ResetChanges(window.model)
-	} else {
 		window.menu.currentPage.StoreChanges(window.model)
+	} else {
+		window.menu.currentPage.ResetChanges(window.model)
 	}
 
 	// Reset currentPage
