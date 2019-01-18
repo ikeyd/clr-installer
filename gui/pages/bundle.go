@@ -31,7 +31,7 @@ var (
 type Bundle struct {
 	bundles []*swupd.Bundle     // Known bundles
 	box     *gtk.Box            // Main layout
-	checks  *gtk.Box            // Where to store checks
+	checks  *gtk.FlowBox        // Where to store checks
 	scroll  *gtk.ScrolledWindow // Scroll the checks
 }
 
@@ -135,10 +135,11 @@ func NewBundlePage() (Page, error) {
 	bundle.box.PackStart(label, false, false, 0)
 
 	// check list
-	bundle.checks, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	bundle.checks, err = gtk.FlowBoxNew()
 	if err != nil {
 		return nil, err
 	}
+	bundle.checks.SetSelectionMode(gtk.SELECTION_NONE)
 	bundle.scroll, err = gtk.ScrolledWindowNew(nil, nil)
 	if err != nil {
 		return nil, err
@@ -153,7 +154,7 @@ func NewBundlePage() (Page, error) {
 		if err != nil {
 			return nil, err
 		}
-		bundle.checks.PackStart(wid, false, false, 0)
+		bundle.checks.Add(wid)
 	}
 
 	return bundle, nil
