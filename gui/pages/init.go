@@ -28,9 +28,10 @@ type Controller interface {
 }
 
 const (
-	PageIDTimezone  = iota
-	PageIDLanguage  = iota
-	PageIDKeyboard  = iota
-	PageIDBundle    = iota
-	PageIDTelemetry = iota
+	PageIDTimezone   = iota
+	PageIDLanguage   = iota
+	PageIDKeyboard   = iota
+	PageIDBundle     = iota
+	PageIDTelemetry  = iota
+	PageIDDiskConfig = iota
 )

@@ -163,6 +163,7 @@ func NewWindow() (*Window, error) {
 		pages.NewKeyboardPage,
 		pages.NewBundlePage,
 		pages.NewTelemetryPage,
+		pages.NewDiskConfigPage,
 	}
 
 	// Create all pages
