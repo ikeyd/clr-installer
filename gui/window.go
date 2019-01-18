@@ -406,6 +406,9 @@ func (window *Window) ActivatePage(page pages.Page) {
 	id := page.GetID()
 	root := window.pages[id]
 	if root != nil {
+		// Update the new page
+		window.SetButtonState(pages.ButtonConfirm, false)
+		page.ResetChanges()
 		// Set the root stack to show the new page
 		window.rootStack.SetVisibleChild(window.pages[id])
 	}
