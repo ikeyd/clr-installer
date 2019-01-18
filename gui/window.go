@@ -33,9 +33,9 @@ type Window struct {
 
 	// Buttons
 	buttons struct {
-		stack     *gtk.Stack    // Storage for buttons
-		boxPrimary *gtk.Box // Storage for main buttons (install/quit)
-		boxSecondary *gtk.Box // Storage for secondary buttons (confirm/cancel)
+		stack        *gtk.Stack // Storage for buttons
+		boxPrimary   *gtk.Box   // Storage for main buttons (install/quit)
+		boxSecondary *gtk.Box   // Storage for secondary buttons (confirm/cancel)
 
 		confirm *gtk.Button // Apply changes
 		cancel  *gtk.Button // Cancel changes
@@ -386,10 +386,10 @@ func (window *Window) ActivatePage(page pages.Page) {
 
 // SetButtonState is called by the pages to enable/disable certain buttons.
 func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
-	if flags&pages.ButtonCancel==pages.ButtonCancel {
+	if flags&pages.ButtonCancel == pages.ButtonCancel {
 		window.buttons.cancel.SetSensitive(enabled)
 	}
-	if flags&pages.ButtonConfirm==pages.ButtonConfirm {
+	if flags&pages.ButtonConfirm == pages.ButtonConfirm {
 		window.buttons.confirm.SetSensitive(enabled)
 	}
 }
