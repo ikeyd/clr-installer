@@ -170,7 +170,7 @@ func (bundle *Bundle) GetID() int {
 }
 
 func (bundle *Bundle) GetIcon() string {
-	return "preferences-desktop-applications"
+	return "applications-system"
 }
 
 func (bundle *Bundle) GetRootWidget() gtk.IWidget {

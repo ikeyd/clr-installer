@@ -77,7 +77,7 @@ func (view *ContentView) AddPage(page pages.Page) {
 
 	// image
 	img, _ := gtk.ImageNewFromIconName(page.GetIcon() + "-symbolic", gtk.ICON_SIZE_DIALOG)
-	img.SetMarginEnd(6)
+	img.SetMarginEnd(12)
 	box.PackStart(img, false, false, 0)
 
 	// label
