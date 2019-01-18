@@ -40,7 +40,7 @@ func (t *DiskConfig) GetSummary() string {
 }
 
 func (t *DiskConfig) GetTitle() string {
-	return t.GetSummary()
+	return t.GetSummary() + " - WARNING: SUPER EXPERIMENTAL"
 }
 
 func (t *DiskConfig) StoreChanges(model *model.SystemInstall) {}
