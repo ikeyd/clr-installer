@@ -243,39 +243,14 @@ func (window *Window) AddPage(page pages.Page) error {
 		return err
 	}
 
-	// Store root widget too
-	root := page.GetRootWidget()
-	if root == nil {
-		window.pages[id] = root
-		return nil
+	header, err := PageHeaderNew(page)
+	if err != nil {
+		return err
 	}
+	root := header.GetRootWidget()
 
-	ebox, _ := gtk.EventBoxNew()
-	st, _ := ebox.GetStyleContext()
-	st.AddClass("installer-header-box")
-	box, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
-
-	box2, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	box2.SetBorderWidth(6)
-	ebox.Add(box2)
-	box.PackStart(ebox, false, false, 0)
-	img, _ := gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_INVALID)
-	img.SetPixelSize(48)
-	img.SetMarginStart(6)
-	img.SetMarginEnd(12)
-	img.SetMarginTop(4)
-	img.SetMarginBottom(4)
-	box2.PackStart(img, false, false, 0)
-
-	lab, _ := gtk.LabelNew("<big>" + page.GetTitle() + "</big>")
-	lab.SetUseMarkup(true)
-	box2.PackStart(lab, false, false, 0)
-	box.ShowAll()
-	ebox.SetMarginBottom(6)
-
-	box.PackStart(root, true, true, 0)
-	window.pages[id] = box
-	window.rootStack.AddNamed(box, "page:"+string(id))
+	window.pages[id] = root
+	window.rootStack.AddNamed(root, "page:"+string(id))
 
 	return nil
 }
