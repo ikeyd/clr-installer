@@ -192,7 +192,9 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 		if err != nil {
 			return nil, err
 		}
-		window.AddPage(page)
+		if err = window.AddPage(page); err != nil {
+			return nil, err
+		}
 	}
 
 	// Show the whole window now
@@ -232,17 +234,20 @@ func (window *Window) InitScreens() error {
 }
 
 // AddPage will add the page to the relevant screen
-func (window *Window) AddPage(page pages.Page) {
+func (window *Window) AddPage(page pages.Page) error {
 	id := page.GetID()
 
 	// Add to the required or advanced(optional) screen
-	window.menu.screens[page.IsRequired()].AddPage(page)
+	err := window.menu.screens[page.IsRequired()].AddPage(page)
+	if err != nil {
+		return err
+	}
 
 	// Store root widget too
 	root := page.GetRootWidget()
 	if root == nil {
 		window.pages[id] = root
-		return
+		return nil
 	}
 
 	ebox, _ := gtk.EventBoxNew()
@@ -271,6 +276,8 @@ func (window *Window) AddPage(page pages.Page) {
 	box.PackStart(root, true, true, 0)
 	window.pages[id] = box
 	window.rootStack.AddNamed(box, "page:"+string(id))
+
+	return nil
 }
 
 // createNavButton creates specialised navigation button
