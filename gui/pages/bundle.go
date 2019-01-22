@@ -186,5 +186,5 @@ func (bundle *Bundle) ResetChanges() {
 
 // GetConfiguredValue returns our current config
 func (bundle *Bundle) GetConfiguredValue() string {
-	return ""
+	return "No bundles configured"
 }
