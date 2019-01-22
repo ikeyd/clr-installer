@@ -18,6 +18,7 @@ type Timezone struct {
 	box        *gtk.Box
 	scroll     *gtk.ScrolledWindow
 	list       *gtk.ListBox
+	selected   *timezone.TimeZone
 }
 
 // NewTimezonePage returns a new TimezonePage
@@ -54,7 +55,7 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 	}
 	t.list.SetSelectionMode(gtk.SELECTION_SINGLE)
 	t.list.SetActivateOnSingleClick(true)
-	// t.list.Connect("row-activated", timezone.onRowActivated)
+	t.list.Connect("row-activated", t.onRowActivated)
 	t.scroll.Add(t.list)
 	// Remove background
 	st, _ := t.list.GetStyleContext()
@@ -73,6 +74,17 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 	}
 
 	return t, nil
+}
+
+func (t *Timezone) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
+	if row == nil {
+		t.controller.SetButtonState(ButtonConfirm, false)
+		t.selected = nil
+		return
+	}
+	// Go activate this.
+	t.selected = t.timezones[row.GetIndex()]
+	t.controller.SetButtonState(ButtonConfirm, true)
 }
 
 // IsRequired will return true as we always need a timezone
@@ -100,7 +112,9 @@ func (t *Timezone) GetTitle() string {
 	return t.GetSummary()
 }
 
-func (t *Timezone) StoreChanges() {}
+func (t *Timezone) StoreChanges() {
+	t.model.Timezone = t.selected
+}
 
 // ResetChanges will find the default model selection and set the
 // timezone as appropriate in the view
@@ -115,8 +129,11 @@ func (t *Timezone) ResetChanges() {
 		if tz.Code != code {
 			continue
 		}
+
+		// Select row in the box, activate it and scroll to it
 		row := t.list.GetRowAtIndex(n)
 		t.list.SelectRow(row)
 		scrollToView(t.scroll, t.list, &row.Widget)
+		t.onRowActivated(t.list, row)
 	}
 }
