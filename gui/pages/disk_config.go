@@ -104,7 +104,7 @@ func (disk *DiskConfig) buildList() error {
 		box.PackStart(img, false, false, 0)
 		text := fmt.Sprintf("<big>Wipe all data on: <b>%s</b></big>\n", device.GetDeviceFile())
 		for _, child := range device.Children {
-			text += fmt.Sprintf(" - Create partition <b>%s</b> with type <b>%s</b> (%s)\n", child.GetDeviceFile(), child.FsType, child.Label)
+			text += fmt.Sprintf(" • Create partition <b>%s</b> with type <b>%s</b> (%s)\n", child.GetDeviceFile(), child.FsType, child.Label)
 		}
 
 		label, err := gtk.LabelNew(text)

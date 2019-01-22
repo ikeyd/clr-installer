@@ -210,5 +210,5 @@ func (bundle *Bundle) GetConfiguredValue() string {
 	if bundle.model.Bundles == nil {
 		return "No bundles configured"
 	}
-	return " - " + strings.Join(bundle.model.Bundles, "\n - ")
+	return " • " + strings.Join(bundle.model.Bundles, "\n • ")
 }
