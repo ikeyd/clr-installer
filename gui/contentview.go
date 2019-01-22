@@ -66,31 +66,15 @@ func (view *ContentView) GetRootWidget() gtk.IWidget {
 
 // AddPage will add the relevant page to this content view.
 // Right now it does nothing.
-func (view *ContentView) AddPage(page pages.Page) {
-	// TESTING CODE ONLY!
-	box, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	box.SetHAlign(gtk.ALIGN_START)
-	box.SetMarginStart(18)
-	box.SetMarginEnd(18)
-	box.SetMarginTop(6)
-	box.SetMarginBottom(6)
+func (view *ContentView) AddPage(page pages.Page) error {
+	widget, err := NewSummaryWidget(page)
+	if err != nil {
+		return err
+	}
 
-	// image
-	img, _ := gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_DIALOG)
-	img.SetMarginEnd(12)
-	box.PackStart(img, false, false, 0)
-
-	// label
-	wid, _ := gtk.LabelNew("<big>" + page.GetSummary() + "</big>")
-	wid.SetUseMarkup(true)
-	wid.SetHAlign(gtk.ALIGN_START)
-	box.PackStart(wid, false, false, 0)
-
-	wrap, _ := gtk.ListBoxRowNew()
-	wrap.Add(box)
-	wrap.ShowAll()
-	view.list.Add(wrap)
-	view.views[wrap.GetIndex()] = page
+	view.list.Add(widget.GetRootWidget())
+	view.views[widget.GetRowIndex()] = page
+	return nil
 }
 
 func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
