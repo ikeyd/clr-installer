@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"fmt"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -81,4 +82,8 @@ func (s *SummaryWidget) GetRootWidget() *gtk.ListBoxRow {
 // GetRowIndex returns the row index of our internal GtkListBoxRow
 func (s *SummaryWidget) GetRowIndex() int {
 	return s.handle.GetIndex()
+}
+
+func (s *SummaryWidget) Update() {
+	fmt.Printf("Updating: %s\n", s.page.GetSummary())
 }

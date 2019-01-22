@@ -12,7 +12,8 @@ import (
 // ContentView is used to encapsulate the Required/Advanced options view
 // by wrapping them into simple styled lists
 type ContentView struct {
-	views      map[int]pages.Page // Mapping of row to page
+	views      map[int]pages.Page     // Mapping of row to page
+	widgets    map[int]*SummaryWidget // Mapping of page to header
 	controller pages.Controller
 
 	scroll *gtk.ScrolledWindow
@@ -27,6 +28,7 @@ func NewContentView(controller pages.Controller) (*ContentView, error) {
 	view := &ContentView{
 		controller: controller,
 		views:      make(map[int]pages.Page),
+		widgets:    make(map[int]*SummaryWidget),
 	}
 
 	// Set up the scroller
@@ -74,6 +76,10 @@ func (view *ContentView) AddPage(page pages.Page) error {
 
 	view.list.Add(widget.GetRootWidget())
 	view.views[widget.GetRowIndex()] = page
+	view.widgets[page.GetID()] = widget
+
+	// Update for first time
+	widget.Update()
 	return nil
 }
 
@@ -83,4 +89,8 @@ func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 	}
 	// Go activate this.
 	view.controller.ActivatePage(view.views[row.GetIndex()])
+}
+
+func (view *ContentView) UpdateView(page pages.Page) {
+	view.widgets[page.GetID()].Update()
 }

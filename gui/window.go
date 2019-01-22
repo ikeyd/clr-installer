@@ -363,6 +363,9 @@ func (window *Window) pageClosed(applied bool) {
 		window.menu.currentPage.ResetChanges()
 	}
 
+	// Reset the SummaryWidget for responsible controller
+	window.menu.screens[window.menu.currentPage.IsRequired()].UpdateView(window.menu.currentPage)
+
 	// Reset currentPage
 	window.menu.currentPage = nil
 
