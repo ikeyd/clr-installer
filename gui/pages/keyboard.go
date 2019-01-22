@@ -15,6 +15,7 @@ type Keyboard struct {
 	controller Controller
 	model      *model.SystemInstall
 	keymaps    []*keyboard.Keymap
+	selected   *keyboard.Keymap
 	box        *gtk.Box
 	scroll     *gtk.ScrolledWindow
 	list       *gtk.ListBox
@@ -54,44 +55,91 @@ func NewKeyboardPage(controller Controller, model *model.SystemInstall) (Page, e
 	}
 	keyboard.list.SetSelectionMode(gtk.SELECTION_SINGLE)
 	keyboard.list.SetActivateOnSingleClick(true)
-	// keyboard.list.Connect("row-activated", keyboard.onRowActivated)
+	keyboard.list.Connect("row-activated", keyboard.onRowActivated)
 	keyboard.scroll.Add(keyboard.list)
 	// Remove background
 	st, _ := keyboard.list.GetStyleContext()
 	st.AddClass("scroller-special")
 
+	for _, kmap := range keyboard.keymaps {
+		lab, err := gtk.LabelNew("<big>" + kmap.Code + "</big>")
+		if err != nil {
+			return nil, err
+		}
+		lab.SetUseMarkup(true)
+		lab.SetHAlign(gtk.ALIGN_START)
+		lab.SetXAlign(0.0)
+		lab.ShowAll()
+		keyboard.list.Add(lab)
+	}
+
 	return keyboard, nil
 }
 
+func (k *Keyboard) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
+	if row == nil {
+		k.controller.SetButtonState(ButtonConfirm, false)
+		k.selected = nil
+		return
+	}
+	// Go activate this.
+	k.selected = k.keymaps[row.GetIndex()]
+	k.controller.SetButtonState(ButtonConfirm, true)
+}
+
 // IsRequired will return true as we always need a Keyboard
-func (t *Keyboard) IsRequired() bool {
+func (k *Keyboard) IsRequired() bool {
 	return true
 }
 
-func (t *Keyboard) GetID() int {
+func (k *Keyboard) GetID() int {
 	return PageIDKeyboard
 }
 
-func (t *Keyboard) GetIcon() string {
+func (k *Keyboard) GetIcon() string {
 	return "preferences-desktop-keyboard-shortcuts"
 }
 
-func (t *Keyboard) GetRootWidget() gtk.IWidget {
-	return t.box
+func (k *Keyboard) GetRootWidget() gtk.IWidget {
+	return k.box
 }
 
-func (t *Keyboard) GetSummary() string {
+func (k *Keyboard) GetSummary() string {
 	return "Configure the Keyboard"
 }
 
-func (t *Keyboard) GetTitle() string {
-	return t.GetSummary()
+func (k *Keyboard) GetTitle() string {
+	return k.GetSummary()
 }
 
-func (t *Keyboard) StoreChanges() {}
-func (t *Keyboard) ResetChanges() {}
+func (k *Keyboard) StoreChanges() {
+	k.model.Keyboard = k.selected
+}
+
+func (k *Keyboard) ResetChanges() {
+	code := keyboard.DefaultKeyboard
+	if k.model.Keyboard.Code != "" {
+		code = k.model.Keyboard.Code
+	}
+
+	// Preselect the timezone here
+	for n, kb := range k.keymaps {
+		if kb.Code != code {
+			continue
+		}
+
+		// Select row in the box, activate it and scroll to it
+		row := k.list.GetRowAtIndex(n)
+		k.list.SelectRow(row)
+		k.onRowActivated(k.list, row)
+		scrollToView(k.scroll, k.list, &row.Widget)
+	}
+}
 
 // GetConfiguredValue returns our current config
-func (t *Keyboard) GetConfiguredValue() string {
-	return ""
+func (k *Keyboard) GetConfiguredValue() string {
+	if k.model.Keyboard == nil {
+		return keyboard.DefaultKeyboard
+	}
+	return k.model.Keyboard.Code
 }
