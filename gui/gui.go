@@ -102,6 +102,12 @@ window {
 	border-radius: 0px;
 	box-shadow: none;
 }
+
+.installer-summary-widget .configured-value {
+	font-size: 90%;
+	color: white;
+}
+
 .nav-button {
 	background-color: #5ECBF2;
 	color: black;

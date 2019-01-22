@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"fmt"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -19,14 +18,18 @@ import (
 // of each 'page' within the installer in a condensed form.
 type SummaryWidget struct {
 	handle *gtk.ListBoxRow
+	layout *gtk.Box
 	box    *gtk.Box
 	image  *gtk.Image
 	label  *gtk.Label
+	value  *gtk.Label
 	page   pages.Page
 }
 
 // NewSummaryWidget will construct a new SummaryWidget for the given page.
 func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
+	var st *gtk.StyleContext
+
 	// Create our root widget
 	handle, err := gtk.ListBoxRowNew()
 	if err != nil {
@@ -39,16 +42,23 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 		page:   page,
 	}
 
-	// Create layout box
-	s.box, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	// Add styling
+	st, err = s.handle.GetStyleContext()
 	if err != nil {
 		return nil, err
 	}
-	s.box.SetHAlign(gtk.ALIGN_START)
-	s.box.SetMarginStart(18)
-	s.box.SetMarginEnd(18)
-	s.box.SetMarginTop(6)
-	s.box.SetMarginBottom(6)
+	st.AddClass("installer-summary-widget")
+
+	// Create layout box
+	s.layout, err = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	s.layout.SetHAlign(gtk.ALIGN_START)
+	s.layout.SetMarginStart(18)
+	s.layout.SetMarginEnd(18)
+	s.layout.SetMarginTop(6)
+	s.layout.SetMarginBottom(6)
 
 	// Create image
 	s.image, err = gtk.ImageNewFromIconName(page.GetIcon()+"-symbolic", gtk.ICON_SIZE_DIALOG)
@@ -56,9 +66,16 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 		return nil, err
 	}
 	s.image.SetMarginEnd(12)
-	s.box.PackStart(s.image, false, false, 0)
+	s.layout.PackStart(s.image, false, false, 0)
 
-	// label
+	// Label box
+	s.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
+	s.layout.PackStart(s.box, false, false, 0)
+
+	// title label
 	s.label, err = gtk.LabelNew("<big>" + page.GetSummary() + "</big>")
 	if err != nil {
 		return nil, err
@@ -67,8 +84,27 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 	s.label.SetHAlign(gtk.ALIGN_START)
 	s.box.PackStart(s.label, false, false, 0)
 
+	// value label
+	s.value, err = gtk.LabelNew("")
+	if err != nil {
+		return nil, err
+	}
+	st, err = s.value.GetStyleContext()
+	if err != nil {
+		return nil, err
+	}
+	st.AddClass("configured-value")
+	s.value.SetUseMarkup(false)
+	s.value.SetHAlign(gtk.ALIGN_START)
+	s.box.PackStart(s.value, false, false, 0)
+
+	// Do not show by ShowAll() or by default, to allow hiding.
+	s.value.ShowAll()
+	s.value.SetNoShowAll(true)
+	s.value.Hide()
+
 	// Add to row and show it
-	s.handle.Add(s.box)
+	s.handle.Add(s.layout)
 	s.handle.ShowAll()
 
 	return s, nil
@@ -84,6 +120,13 @@ func (s *SummaryWidget) GetRowIndex() int {
 	return s.handle.GetIndex()
 }
 
+// Update will alter the view to show the currently configured values
 func (s *SummaryWidget) Update() {
-	fmt.Printf("Updating: %s\n", s.page.GetSummary())
+	value := s.page.GetConfiguredValue()
+	if value == "" {
+		s.value.Hide()
+		return
+	}
+	s.value.SetText(value)
+	s.value.Show()
 }
