@@ -162,3 +162,8 @@ func (disk *DiskConfig) GetTitle() string {
 func (disk *DiskConfig) StoreChanges() {}
 func (disk *DiskConfig) ResetChanges() {
 }
+
+// GetConfiguredValue returns our current config
+func (disk *DiskConfig) GetConfiguredValue() string {
+	return ""
+}

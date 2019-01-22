@@ -137,3 +137,8 @@ func (t *Timezone) ResetChanges() {
 		t.onRowActivated(t.list, row)
 	}
 }
+
+// GetConfiguredValue returns our current config
+func (t *Timezone) GetConfiguredValue() string {
+	return ""
+}

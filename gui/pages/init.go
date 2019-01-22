@@ -30,6 +30,7 @@ type Page interface {
 	GetSummary() string
 	GetTitle() string
 	GetIcon() string
+	GetConfiguredValue() string
 	GetRootWidget() gtk.IWidget
 	StoreChanges() // Store changes in the model
 	ResetChanges() // Reset data to model

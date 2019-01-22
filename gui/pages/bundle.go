@@ -183,3 +183,8 @@ func (bundle *Bundle) StoreChanges() {}
 func (bundle *Bundle) ResetChanges() {
 	bundle.controller.SetButtonState(ButtonConfirm, true)
 }
+
+// GetConfiguredValue returns our current config
+func (bundle *Bundle) GetConfiguredValue() string {
+	return ""
+}

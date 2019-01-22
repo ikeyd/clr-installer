@@ -85,3 +85,8 @@ func (t *Language) GetTitle() string {
 
 func (t *Language) StoreChanges() {}
 func (t *Language) ResetChanges() {}
+
+// GetConfiguredValue returns our current config
+func (t *Language) GetConfiguredValue() string {
+	return ""
+}

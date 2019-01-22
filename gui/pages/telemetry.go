@@ -80,3 +80,11 @@ func (t *Telemetry) ResetChanges() {
 	t.controller.SetButtonState(ButtonConfirm, true)
 	t.check.SetActive(t.model.IsTelemetryEnabled())
 }
+
+// GetConfiguredValue returns our current config
+func (t *Telemetry) GetConfiguredValue() string {
+	if t.model.IsTelemetryEnabled() {
+		return "Enabled"
+	}
+	return "Disabled"
+}

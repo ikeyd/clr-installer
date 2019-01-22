@@ -90,3 +90,8 @@ func (t *Keyboard) GetTitle() string {
 
 func (t *Keyboard) StoreChanges() {}
 func (t *Keyboard) ResetChanges() {}
+
+// GetConfiguredValue returns our current config
+func (t *Keyboard) GetConfiguredValue() string {
+	return ""
+}
