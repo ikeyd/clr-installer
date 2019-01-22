@@ -5,7 +5,6 @@
 package pages
 
 import (
-	"fmt"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/timezone"
 	"github.com/gotk3/gotk3/gtk"
@@ -61,9 +60,9 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 	st, _ := t.list.GetStyleContext()
 	st.AddClass("scroller-special")
 
-	var selectedRow int = -1
+	var selRow *gtk.ListBoxRow
 
-	for n, zone := range t.timezones {
+	for _, zone := range t.timezones {
 		lab, err := gtk.LabelNew("<big>" + zone.Code + "</big>")
 		if err != nil {
 			return nil, err
@@ -72,12 +71,24 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 		lab.SetHAlign(gtk.ALIGN_START)
 		lab.SetXAlign(0.0)
 		lab.ShowAll()
-		t.list.Add(lab)
+
+		// Wrap it in a row
+		wrap, err := gtk.ListBoxRowNew()
+		if err != nil {
+			return nil, err
+		}
+		wrap.Add(lab)
+		t.list.Add(wrap)
+
 		if zone.Code == timezone.DefaultTimezone {
-			selectedRow = n
+			selRow = wrap
 		}
 	}
-	fmt.Println(selectedRow)
+
+	// Select row if we have it
+	if selRow != nil {
+		t.list.SelectRow(selRow)
+	}
 
 	return t, nil
 }
