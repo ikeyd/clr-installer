@@ -165,5 +165,5 @@ func (disk *DiskConfig) ResetChanges() {
 
 // GetConfiguredValue returns our current config
 func (disk *DiskConfig) GetConfiguredValue() string {
-	return ""
+	return "No usable media found"
 }
