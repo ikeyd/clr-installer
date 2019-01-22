@@ -140,5 +140,8 @@ func (t *Timezone) ResetChanges() {
 
 // GetConfiguredValue returns our current config
 func (t *Timezone) GetConfiguredValue() string {
-	return ""
+	if t.model.Timezone == nil {
+		return timezone.DefaultTimezone
+	}
+	return t.model.Timezone.Code
 }
