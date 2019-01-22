@@ -55,6 +55,7 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 		return nil, err
 	}
 	s.layout.SetHAlign(gtk.ALIGN_START)
+	s.layout.SetVAlign(gtk.ALIGN_START)
 	s.layout.SetMarginStart(18)
 	s.layout.SetMarginEnd(18)
 	s.layout.SetMarginTop(6)
@@ -66,6 +67,7 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 		return nil, err
 	}
 	s.image.SetMarginEnd(12)
+	s.image.SetVAlign(gtk.ALIGN_START)
 	s.layout.PackStart(s.image, false, false, 0)
 
 	// Label box

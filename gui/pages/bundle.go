@@ -72,7 +72,7 @@ func createBundleWidget(bundle *swupd.Bundle) (*gtk.CheckButton, error) {
 
 	// Create display image
 	img, err := gtk.ImageNew()
-	img.SetMarginStart(6)
+	img.SetMarginStart(12)
 	img.SetMarginEnd(6)
 	if err != nil {
 		return nil, err
@@ -93,6 +93,7 @@ func createBundleWidget(bundle *swupd.Bundle) (*gtk.CheckButton, error) {
 		img.SetFromIconName("package-x-generic", gtk.ICON_SIZE_INVALID)
 	}
 	img.SetPixelSize(48)
+	img.SetSizeRequest(48, 48)
 	root.PackStart(img, false, false, 0)
 
 	txt := fmt.Sprintf("<b>%s</b>\n%s", bundle.Name, bundle.Desc)
@@ -181,7 +182,7 @@ func (bundle *Bundle) GetSummary() string {
 }
 
 func (bundle *Bundle) GetTitle() string {
-	return "Select a bundle"
+	return "Select additional bundles to be added to the system"
 }
 
 func (bundle *Bundle) StoreChanges() {
