@@ -60,7 +60,7 @@ const (
 // is correctly performed, and that we have valid constraints in which to
 // scroll.
 func scrollToView(scroll *gtk.ScrolledWindow, container gtk.IWidget, widget *gtk.Widget) {
-	glib.IdleAdd(func() bool {
+	glib.TimeoutAdd(100, func() bool {
 		adjustment := scroll.GetVAdjustment()
 		_, y, err := widget.TranslateCoordinates(container, 0, 0)
 		if err != nil {
