@@ -139,7 +139,7 @@ func (k *Keyboard) ResetChanges() {
 // GetConfiguredValue returns our current config
 func (k *Keyboard) GetConfiguredValue() string {
 	if k.model.Keyboard == nil {
-		return keyboard.DefaultKeyboard
+		return ""
 	}
 	return k.model.Keyboard.Code
 }

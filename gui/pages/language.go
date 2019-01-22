@@ -139,7 +139,7 @@ func (l *Language) ResetChanges() {
 // GetConfiguredValue returns our current config
 func (l *Language) GetConfiguredValue() string {
 	if l.model.Language == nil {
-		return language.DefaultLanguage
+		return ""
 	}
 	return l.model.Language.Code
 }
