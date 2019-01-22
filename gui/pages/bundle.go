@@ -12,6 +12,7 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -36,6 +37,8 @@ type Bundle struct {
 	box        *gtk.Box            // Main layout
 	checks     *gtk.FlowBox        // Where to store checks
 	scroll     *gtk.ScrolledWindow // Scroll the checks
+
+	selections []*gtk.CheckButton
 }
 
 // LookupBundleIcon attempts to find the icon for the given bundle.
@@ -52,7 +55,7 @@ func LookupBundleIcon(bundle *swupd.Bundle) (string, bool) {
 }
 
 // createBundleWidget creates new displayable widget for the given bundle
-func createBundleWidget(bundle *swupd.Bundle) (gtk.IWidget, error) {
+func createBundleWidget(bundle *swupd.Bundle) (*gtk.CheckButton, error) {
 	// Create the root layout
 	root, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	if err != nil {
@@ -143,12 +146,14 @@ func NewBundlePage(controller Controller, model *model.SystemInstall) (Page, err
 	bundle.scroll.Add(bundle.checks)
 	bundle.box.PackStart(bundle.scroll, true, true, 0)
 
+	// Match the bundle set to our ticks
 	for _, b := range bundle.bundles {
 		wid, err := createBundleWidget(b)
 		if err != nil {
 			return nil, err
 		}
 		bundle.checks.Add(wid)
+		bundle.selections = append(bundle.selections, wid)
 	}
 
 	return bundle, nil
@@ -179,12 +184,30 @@ func (bundle *Bundle) GetTitle() string {
 	return "Select a bundle"
 }
 
-func (bundle *Bundle) StoreChanges() {}
+func (bundle *Bundle) StoreChanges() {
+	// Match model selection to our selections
+	for n, b := range bundle.bundles {
+		set := bundle.selections[n].GetActive()
+		if set {
+			bundle.model.AddBundle(b.Name)
+		} else {
+			bundle.model.RemoveBundle(b.Name)
+		}
+	}
+}
+
 func (bundle *Bundle) ResetChanges() {
+	// Match selection to what's in the model
+	for n, b := range bundle.bundles {
+		bundle.selections[n].SetActive(bundle.model.ContainsBundle(b.Name))
+	}
 	bundle.controller.SetButtonState(ButtonConfirm, true)
 }
 
 // GetConfiguredValue returns our current config
 func (bundle *Bundle) GetConfiguredValue() string {
-	return "No bundles configured"
+	if bundle.model.Bundles == nil {
+		return "No bundles configured"
+	}
+	return " - " + strings.Join(bundle.model.Bundles, "\n - ")
 }
