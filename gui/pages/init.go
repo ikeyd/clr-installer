@@ -5,7 +5,9 @@
 package pages
 
 import (
+	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
+	"math"
 )
 
 // Button allows us to flag up different buttons
@@ -49,3 +51,22 @@ const (
 	PageIDTelemetry  = iota
 	PageIDDiskConfig = iota
 )
+
+// Private helper to assist in the ugliness of forcibly scrolling a GtkListBox
+// to the selected row
+//
+// Note this must be performed on the idle loop in glib to ensure selection
+// is correctly performed, and that we have valid constraints in which to
+// scroll.
+func scrollToView(scroll *gtk.ScrolledWindow, container gtk.IWidget, widget *gtk.Widget) {
+	glib.IdleAdd(func() bool {
+		adjustment := scroll.GetVAdjustment()
+		_, y, err := widget.TranslateCoordinates(container, 0, 0)
+		if err != nil {
+			return false
+		}
+		maxSize := adjustment.GetUpper() - adjustment.GetPageSize()
+		adjustment.SetValue(math.Min(float64(y), maxSize))
+		return false
+	})
+}

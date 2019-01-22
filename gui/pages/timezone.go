@@ -60,8 +60,6 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 	st, _ := t.list.GetStyleContext()
 	st.AddClass("scroller-special")
 
-	var selRow *gtk.ListBoxRow
-
 	for _, zone := range t.timezones {
 		lab, err := gtk.LabelNew("<big>" + zone.Code + "</big>")
 		if err != nil {
@@ -71,23 +69,7 @@ func NewTimezonePage(controller Controller, model *model.SystemInstall) (Page, e
 		lab.SetHAlign(gtk.ALIGN_START)
 		lab.SetXAlign(0.0)
 		lab.ShowAll()
-
-		// Wrap it in a row
-		wrap, err := gtk.ListBoxRowNew()
-		if err != nil {
-			return nil, err
-		}
-		wrap.Add(lab)
-		t.list.Add(wrap)
-
-		if zone.Code == timezone.DefaultTimezone {
-			selRow = wrap
-		}
-	}
-
-	// Select row if we have it
-	if selRow != nil {
-		t.list.SelectRow(selRow)
+		t.list.Add(lab)
 	}
 
 	return t, nil
@@ -119,4 +101,22 @@ func (t *Timezone) GetTitle() string {
 }
 
 func (t *Timezone) StoreChanges() {}
-func (t *Timezone) ResetChanges() {}
+
+// ResetChanges will find the default model selection and set the
+// timezone as appropriate in the view
+func (t *Timezone) ResetChanges() {
+	code := timezone.DefaultTimezone
+	if t.model.Timezone.Code != "" {
+		code = t.model.Timezone.Code
+	}
+
+	// Preselect the timezone here
+	for n, tz := range t.timezones {
+		if tz.Code != code {
+			continue
+		}
+		row := t.list.GetRowAtIndex(n)
+		t.list.SelectRow(row)
+		scrollToView(t.scroll, t.list, &row.Widget)
+	}
+}
