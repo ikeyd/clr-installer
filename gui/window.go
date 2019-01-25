@@ -32,7 +32,7 @@ type Window struct {
 		currentPage pages.Page            // Pointer to the currently open page
 	}
 
-	// Buttons	"github.com/clearlinux/clr-installer/model"
+	// Buttons
 
 	buttons struct {
 		stack        *gtk.Stack // Storage for buttons
@@ -301,7 +301,7 @@ func (window *Window) CreateFooter(store *gtk.Box) error {
 	if window.buttons.install, err = createNavButton("INSTALL"); err != nil {
 		return err
 	}
-	window.buttons.install.Connect("clicked", func() { window.beginInstall(); })
+	window.buttons.install.Connect("clicked", func() { window.beginInstall() })
 
 	// Exit button
 	if window.buttons.quit, err = createNavButton("EXIT"); err != nil {
