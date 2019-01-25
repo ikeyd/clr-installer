@@ -55,6 +55,10 @@ func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, er
 	if err != nil {
 		return nil, err
 	}
+	page.scroll.SetMarginStart(48)
+	page.scroll.SetMarginEnd(48)
+	page.scroll.SetMarginTop(24)
+	page.scroll.SetMarginBottom(24)
 	page.layout.PackStart(page.scroll, true, true, 0)
 
 	// Create list
@@ -176,6 +180,7 @@ func (install *InstallPage) Desc(desc string) {
 	if err != nil {
 		panic(err)
 	}
+	install.widgets[install.selection] = widg
 
 	// Pack it into the list
 	install.list.Add(widg.GetRootWidget())
