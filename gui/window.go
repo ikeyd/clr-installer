@@ -197,6 +197,10 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 		}
 	}
 
+	// Let installation continue if possible
+	done := window.menu.screens[ContentViewRequired].IsDone()
+	window.buttons.install.SetSensitive(done)
+
 	// Show the whole window now
 	window.handle.ShowAll()
 
@@ -362,6 +366,10 @@ func (window *Window) pageClosed(applied bool) {
 	} else {
 		window.menu.currentPage.ResetChanges()
 	}
+
+	// Let installation continue if possible
+	done := window.menu.screens[ContentViewRequired].IsDone()
+	window.buttons.install.SetSensitive(done)
 
 	// Reset the SummaryWidget for responsible controller
 	window.menu.screens[window.menu.currentPage.IsRequired()].UpdateView(window.menu.currentPage)

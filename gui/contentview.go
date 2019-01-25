@@ -94,3 +94,13 @@ func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 func (view *ContentView) UpdateView(page pages.Page) {
 	view.widgets[page.GetID()].Update()
 }
+
+// IsDone returns true if all components have been completed
+func (view *ContentView) IsDone() bool {
+	for _, page := range view.views {
+		if !page.IsDone() {
+			return false
+		}
+	}
+	return true
+}
