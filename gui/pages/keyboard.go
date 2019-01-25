@@ -94,7 +94,7 @@ func (k *Keyboard) IsRequired() bool {
 
 // IsDone checks if all the steps are completed
 func (k *Keyboard) IsDone() bool {
-	return false
+	return k.GetConfiguredValue() != ""
 }
 
 func (k *Keyboard) GetID() int {

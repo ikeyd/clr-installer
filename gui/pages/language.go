@@ -94,7 +94,7 @@ func (l *Language) IsRequired() bool {
 
 // IsDone checks if all the steps are completed
 func (l *Language) IsDone() bool {
-	return false
+	return l.GetConfiguredValue() != ""
 }
 
 func (l *Language) GetID() int {

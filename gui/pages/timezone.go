@@ -94,7 +94,7 @@ func (t *Timezone) IsRequired() bool {
 
 // IsDone checks if all the steps are completed
 func (t *Timezone) IsDone() bool {
-	return false
+	return t.GetConfiguredValue() != ""
 }
 
 func (t *Timezone) GetID() int {
