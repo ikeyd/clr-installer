@@ -16,6 +16,7 @@ type Telemetry struct {
 	controller Controller
 	box        *gtk.Box
 	check      *gtk.CheckButton
+	didConfirm bool
 }
 
 // NewTelemetryPage returns a new TelemetryPage
@@ -44,7 +45,9 @@ func NewTelemetryPage(controller Controller, model *model.SystemInstall) (Page, 
 		controller: controller,
 		model:      model,
 		box:        box,
-		check:      check}, nil
+		check:      check,
+		didConfirm: false,
+	}, nil
 }
 
 // IsRequired will return true as we always need a Telemetry
@@ -54,7 +57,7 @@ func (t *Telemetry) IsRequired() bool {
 
 // IsDone checks if all the steps are completed
 func (t *Telemetry) IsDone() bool {
-	return false
+	return t.didConfirm
 }
 
 func (t *Telemetry) GetID() int {
@@ -78,6 +81,7 @@ func (t *Telemetry) GetTitle() string {
 }
 
 func (t *Telemetry) StoreChanges() {
+	t.didConfirm = true
 	t.model.EnableTelemetry(t.check.GetActive())
 }
 
