@@ -6,7 +6,7 @@ package pages
 
 import (
 	"fmt"
-	_ "github.com/clearlinux/clr-installer/controller"
+	ctrl "github.com/clearlinux/clr-installer/controller"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/progress"
 	"github.com/gotk3/gotk3/gtk"
@@ -148,15 +148,15 @@ func (install *InstallPage) ResetChanges() {
 		progress.Set(install)
 
 		// Go install it
-		//err := ctrl.Install(install.controller.GetRootDir(),
-		//	install.model,
-		//	install.controller.GetOptions(),
-		//)
+		err := ctrl.Install(install.controller.GetRootDir(),
+			install.model,
+			install.controller.GetOptions(),
+		)
 
 		// TODO: Handle this moar better.
-		//if err != nil {
-		//	panic(err)
-		//}
+		if err != nil {
+			panic(err)
+		}
 		fmt.Println("Installation completed")
 		install.controller.SetButtonState(ButtonQuit, true)
 	}()
