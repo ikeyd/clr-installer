@@ -211,6 +211,7 @@ func (install *InstallPage) LoopWaitDuration() time.Duration {
 
 // Partial handles an actual progress update
 func (install *InstallPage) Partial(total int, step int) {
+	install.pbar.SetFraction(float64(step) / float64(total))
 }
 
 // Step will step the progressbar in indeterminate mode
