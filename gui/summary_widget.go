@@ -24,6 +24,7 @@ type SummaryWidget struct {
 	label  *gtk.Label
 	value  *gtk.Label
 	page   pages.Page
+	tick   *gtk.Image
 }
 
 // NewSummaryWidget will construct a new SummaryWidget for the given page.
@@ -54,7 +55,7 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 	if err != nil {
 		return nil, err
 	}
-	s.layout.SetHAlign(gtk.ALIGN_START)
+	s.layout.SetHAlign(gtk.ALIGN_FILL)
 	s.layout.SetVAlign(gtk.ALIGN_START)
 	s.layout.SetMarginStart(18)
 	s.layout.SetMarginEnd(18)
@@ -67,8 +68,17 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 		return nil, err
 	}
 	s.image.SetMarginEnd(12)
+	s.image.SetHAlign(gtk.ALIGN_START)
 	s.image.SetVAlign(gtk.ALIGN_START)
 	s.layout.PackStart(s.image, false, false, 0)
+
+	// Create tick image
+	s.tick, err = gtk.ImageNewFromIconName("task-due-symbolic", gtk.ICON_SIZE_BUTTON)
+	s.tick.SetMarginEnd(4)
+	s.tick.SetMarginTop(6)
+	s.tick.SetHAlign(gtk.ALIGN_START)
+	s.tick.SetVAlign(gtk.ALIGN_START)
+	s.layout.PackEnd(s.tick, false, false, 0)
 
 	// Label box
 	s.box, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
@@ -131,4 +141,11 @@ func (s *SummaryWidget) Update() {
 	}
 	s.value.SetText(value)
 	s.value.Show()
+	if s.page.IsDone() {
+		s.tick.SetFromIconName("object-select-symbolic", gtk.ICON_SIZE_BUTTON)
+		s.layout.SetTooltipText("")
+	} else {
+		s.tick.SetFromIconName("task-due-symbolic", gtk.ICON_SIZE_BUTTON)
+		s.layout.SetTooltipText("This task has not yet completed.")
+	}
 }
