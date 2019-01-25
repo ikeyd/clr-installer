@@ -23,19 +23,43 @@ type InstallPage struct {
 	controller Controller
 	model      *model.SystemInstall
 	layout     *gtk.Box
+
+	pbar *gtk.ProgressBar // Progress bar
 }
 
 // NewInstallPage constructs a new InstallPage.
 func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, error) {
-	layout, err := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	var err error
+
+	// Create page
+	page := &InstallPage{
+		controller: controller,
+		model:      model,
+	}
+
+	// Create layout
+	page.layout, err = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 	if err != nil {
 		return nil, err
 	}
-	return &InstallPage{
-		controller: controller,
-		model:      model,
-		layout:     layout,
-	}, nil
+
+	// Create progressbar
+	page.pbar, err = gtk.ProgressBarNew()
+	if err != nil {
+		return nil, err
+	}
+
+	// Sort out padding
+	page.pbar.SetHAlign(gtk.ALIGN_FILL)
+	page.pbar.SetMarginStart(24)
+	page.pbar.SetMarginEnd(24)
+	page.pbar.SetMarginBottom(12)
+	page.pbar.SetMarginTop(12)
+
+	// Throw it on the bottom of the page
+	page.layout.PackEnd(page.pbar, false, false, 0)
+
+	return page, nil
 }
 
 func (install *InstallPage) IsRequired() bool {
@@ -127,6 +151,7 @@ func (install *InstallPage) Partial(total int, step int) {
 
 // Step will step the progressbar in indeterminate mode
 func (install *InstallPage) Step() {
+	install.pbar.Pulse()
 }
 
 // Success notes the install was successful
