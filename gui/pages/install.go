@@ -126,6 +126,7 @@ func (install *InstallPage) ResetChanges() {
 		//if err != nil {
 		//	panic(err)
 		//}
+		fmt.Println("Installation completed")
 	}()
 
 }
