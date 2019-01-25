@@ -6,8 +6,15 @@ package pages
 
 import (
 	"fmt"
+	_ "github.com/clearlinux/clr-installer/controller"
 	"github.com/clearlinux/clr-installer/model"
+	"github.com/clearlinux/clr-installer/progress"
 	"github.com/gotk3/gotk3/gtk"
+	"time"
+)
+
+var (
+	loopWaitDuration = 2 * time.Second
 )
 
 // InstallPage is a specialised page type with no corresponding
@@ -78,5 +85,36 @@ func (install *InstallPage) ResetChanges() {
 		return
 	}
 
+	progress.Set(install)
+	//err := controller.Install(page.tui.rootDir, page.getModel(), page.tui.options)
+
 	fmt.Println("Validation passed")
+}
+
+// Following methods are for the progress.Client API
+func (install *InstallPage) Desc(desc string) {
+	fmt.Println(desc)
+}
+
+// Failure handles failure to install
+func (install *InstallPage) Failure() {
+	fmt.Println("Failure")
+}
+
+// LoopWaitDuration will return the duration for step-waits
+func (install *InstallPage) LoopWaitDuration() time.Duration {
+	return loopWaitDuration
+}
+
+// Partial handles an actual progress update
+func (install *InstallPage) Partial(total int, step int) {
+}
+
+// Step will step the progressbar in indeterminate mode
+func (install *InstallPage) Step() {
+}
+
+// Success notes the install was successful
+func (install *InstallPage) Success() {
+	fmt.Println("Success")
 }
