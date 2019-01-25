@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	loopWaitDuration = 2 * time.Second
+	loopWaitDuration = 200 * time.Millisecond
 )
 
 // InstallPage is a specialised page type with no corresponding
