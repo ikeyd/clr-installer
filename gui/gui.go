@@ -21,8 +21,6 @@ const (
 type Gui struct {
 	window        *Window
 	model         *model.SystemInstall
-	options       args.Args
-	rootDir       string
 	installReboot bool
 }
 
@@ -43,8 +41,6 @@ func (gui *Gui) MustRun(args *args.Args) bool {
 // Run is part of the Frontend interface implementation and is the gui frontend main entry point
 func (gui *Gui) Run(md *model.SystemInstall, rootDir string, options args.Args) (bool, error) {
 	gui.model = md
-	gui.options = options
-	gui.rootDir = rootDir
 	gui.installReboot = false
 
 	// Use dark theming if available to differentiate from other apps
@@ -124,9 +120,9 @@ window {
 	gtk.AddProviderForScreen(screen, sc, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 	// Construct main window
-	win, err := NewWindow(gui.model)
+	win, err := NewWindow(md, rootDir, options)
 	if err != nil {
-		return gui.installReboot, err
+		return false, err
 	}
 	gui.window = win
 

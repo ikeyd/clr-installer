@@ -6,6 +6,7 @@ package gui
 
 import (
 	"fmt"
+	"github.com/clearlinux/clr-installer/args"
 	"github.com/clearlinux/clr-installer/gui/pages"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/glib"
@@ -23,6 +24,9 @@ type Window struct {
 	layout        *gtk.Box    // Main layout (vertical)
 	contentLayout *gtk.Box    // content layout (horizontal)
 	banner        *Banner     // Top banner
+
+	options args.Args // installer args
+	rootDir string    // Root directory
 
 	// Menus
 	menu struct {
@@ -73,7 +77,7 @@ func (window *Window) ConstructHeaderBar() error {
 }
 
 // NewWindow creates a new Window instance
-func NewWindow(model *model.SystemInstall) (*Window, error) {
+func NewWindow(model *model.SystemInstall, rootDir string, options args.Args) (*Window, error) {
 	var err error
 
 	// Construct basic window
@@ -81,6 +85,8 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 		didInit: false,
 		pages:   make(map[int]gtk.IWidget),
 		model:   model,
+		rootDir: rootDir,
+		options: options,
 	}
 	window.menu.screens = make(map[bool]*ContentView)
 
@@ -447,4 +453,14 @@ func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
 // beginInstall begins the real installation routine
 func (window *Window) beginInstall() {
 	window.ActivatePage(window.menu.install)
+}
+
+// GetOptions will return the options given to the window
+func (window *Window) GetOptions() args.Args {
+	return window.options
+}
+
+// GetRootDir will return the root dir
+func (window *Window) GetRootDir() string {
+	return window.rootDir
 }

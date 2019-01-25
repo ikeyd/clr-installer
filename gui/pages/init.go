@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"github.com/clearlinux/clr-installer/args"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	"math"
@@ -47,6 +48,8 @@ type Page interface {
 type Controller interface {
 	ActivatePage(Page)
 	SetButtonState(flags Button, enabled bool)
+	GetRootDir() string
+	GetOptions() args.Args
 }
 
 const (
