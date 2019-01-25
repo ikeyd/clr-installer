@@ -139,6 +139,11 @@ func (disk *DiskConfig) IsRequired() bool {
 	return true
 }
 
+// IsDone checks if all the steps are completed
+func (disk *DiskConfig) IsDone() bool {
+	return false
+}
+
 func (disk *DiskConfig) GetID() int {
 	return PageIDDiskConfig
 }

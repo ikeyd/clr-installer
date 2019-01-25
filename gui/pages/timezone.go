@@ -92,6 +92,11 @@ func (t *Timezone) IsRequired() bool {
 	return true
 }
 
+// IsDone checks if all the steps are completed
+func (t *Timezone) IsDone() bool {
+	return false
+}
+
 func (t *Timezone) GetID() int {
 	return PageIDTimezone
 }

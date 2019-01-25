@@ -92,6 +92,11 @@ func (k *Keyboard) IsRequired() bool {
 	return true
 }
 
+// IsDone checks if all the steps are completed
+func (k *Keyboard) IsDone() bool {
+	return false
+}
+
 func (k *Keyboard) GetID() int {
 	return PageIDKeyboard
 }

@@ -26,6 +26,7 @@ const (
 // main controller, the Window
 type Page interface {
 	IsRequired() bool
+	IsDone() bool
 	GetID() int
 	GetSummary() string
 	GetTitle() string

@@ -52,6 +52,11 @@ func (t *Telemetry) IsRequired() bool {
 	return true
 }
 
+// IsDone checks if all the steps are completed
+func (t *Telemetry) IsDone() bool {
+	return false
+}
+
 func (t *Telemetry) GetID() int {
 	return PageIDTelemetry
 }

@@ -160,6 +160,11 @@ func NewBundlePage(controller Controller, model *model.SystemInstall) (Page, err
 	return bundle, nil
 }
 
+// IsDone checks if all the steps are completed
+func (bundle *Bundle) IsDone() bool {
+	return false
+}
+
 // IsRequired will return false as we have default values
 func (bundle *Bundle) IsRequired() bool {
 	return false

@@ -92,6 +92,11 @@ func (l *Language) IsRequired() bool {
 	return true
 }
 
+// IsDone checks if all the steps are completed
+func (l *Language) IsDone() bool {
+	return false
+}
+
 func (l *Language) GetID() int {
 	return PageIDLanguage
 }
