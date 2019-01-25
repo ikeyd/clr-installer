@@ -23,3 +23,38 @@ func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, er
 		model:      model,
 	}, nil
 }
+
+func (install *InstallPage) IsRequired() bool {
+	return true
+}
+
+func (install *InstallPage) IsDone() bool {
+	return false
+}
+
+func (install *InstallPage) GetID() int {
+	return PageIDInstall
+}
+
+func (install *InstallPage) GetSummary() string {
+	return "Installing Clear Linux OS"
+}
+
+func (install *InstallPage) GetTitle() string {
+	return "Installing Clear Linux OS"
+}
+
+func (install *InstallPage) GetIcon() string {
+	return "system-software-install-symbolic"
+}
+
+func (install *InstallPage) GetConfiguredValue() string {
+	return ""
+}
+
+func (install *InstallPage) GetRootWidget() gtk.IWidget {
+	return nil
+}
+
+func (install *InstallPage) StoreChanges() {}
+func (install *InstallPage) ResetChanges() {}

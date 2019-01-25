@@ -52,6 +52,7 @@ const (
 	PageIDBundle     = iota
 	PageIDTelemetry  = iota
 	PageIDDiskConfig = iota
+	PageIDInstall    = iota // Always last
 )
 
 // Private helper to assist in the ugliness of forcibly scrolling a GtkListBox
