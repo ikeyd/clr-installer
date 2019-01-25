@@ -301,6 +301,7 @@ func (window *Window) CreateFooter(store *gtk.Box) error {
 	if window.buttons.install, err = createNavButton("INSTALL"); err != nil {
 		return err
 	}
+	window.buttons.install.Connect("clicked", func() { window.beginInstall(); })
 
 	// Exit button
 	if window.buttons.quit, err = createNavButton("EXIT"); err != nil {
@@ -415,4 +416,14 @@ func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
 	if flags&pages.ButtonConfirm == pages.ButtonConfirm {
 		window.buttons.confirm.SetSensitive(enabled)
 	}
+}
+
+// beginInstall begins the real installation routine
+func (window *Window) beginInstall() {
+	err := window.model.Validate()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Validation passed")
 }
