@@ -152,6 +152,7 @@ func (install *InstallPage) ResetChanges() {
 			install.model,
 			install.controller.GetOptions(),
 		)
+		install.pbar.SetFraction(1.0)
 
 		// TODO: Handle this moar better.
 		if err != nil {
