@@ -5,6 +5,7 @@
 package pages
 
 import (
+	"fmt"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -14,13 +15,19 @@ import (
 type InstallPage struct {
 	controller Controller
 	model      *model.SystemInstall
+	layout     *gtk.Box
 }
 
 // NewInstallPage constructs a new InstallPage.
 func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, error) {
+	layout, err := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	if err != nil {
+		return nil, err
+	}
 	return &InstallPage{
 		controller: controller,
 		model:      model,
+		layout:     layout,
 	}, nil
 }
 
@@ -53,8 +60,23 @@ func (install *InstallPage) GetConfiguredValue() string {
 }
 
 func (install *InstallPage) GetRootWidget() gtk.IWidget {
-	return nil
+	return install.layout
 }
 
 func (install *InstallPage) StoreChanges() {}
-func (install *InstallPage) ResetChanges() {}
+
+// ResetChanges begins as our initial execution point as we're only going
+// to get called when showing our page.
+func (install *InstallPage) ResetChanges() {
+	// Disable quit button
+	install.controller.SetButtonState(ButtonQuit, false)
+
+	// Validate the model
+	err := install.model.Validate()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("Validation passed")
+}

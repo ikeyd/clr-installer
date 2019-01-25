@@ -19,6 +19,10 @@ const (
 
 	// ButtonConfirm enables the confirm button
 	ButtonConfirm Button = 1 << iota
+
+	// ButtonQuit is only visible on the main view and install page
+	// Normal pages should not modify this button!
+	ButtonQuit Button = 1 << iota
 )
 
 // Page interface provides a common definition that other

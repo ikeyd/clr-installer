@@ -30,6 +30,7 @@ type Window struct {
 		switcher    *Switcher             // Allow switching between main menu
 		screens     map[bool]*ContentView // Mapping to content views
 		currentPage pages.Page            // Pointer to the currently open page
+		install     pages.Page            // Pointer to the installer page
 	}
 
 	// Buttons
@@ -184,6 +185,9 @@ func NewWindow(model *model.SystemInstall) (*Window, error) {
 
 		// advanced
 		pages.NewBundlePage,
+
+		// Always last
+		pages.NewInstallPage,
 	}
 
 	// Create all pages
@@ -239,20 +243,33 @@ func (window *Window) InitScreens() error {
 
 // AddPage will add the page to the relevant screen
 func (window *Window) AddPage(page pages.Page) error {
-	id := page.GetID()
+	var (
+		err error
+		id  int
+	)
 
-	// Add to the required or advanced(optional) screen
-	err := window.menu.screens[page.IsRequired()].AddPage(page)
-	if err != nil {
-		return err
+	id = page.GetID()
+
+	// Non-installer pages go into the menu..
+	if id != pages.PageIDInstall {
+		// Add to the required or advanced(optional) screen
+		err := window.menu.screens[page.IsRequired()].AddPage(page)
+		if err != nil {
+			return err
+		}
+	} else {
+		// Cache the special page
+		window.menu.install = page
 	}
 
+	// Create a header page wrap for the page
 	header, err := PageHeaderNew(page)
 	if err != nil {
 		return err
 	}
 	root := header.GetRootWidget()
 
+	// Make available via root stack
 	window.pages[id] = root
 	window.rootStack.AddNamed(root, "page:"+string(id))
 
@@ -394,18 +411,24 @@ func (window *Window) ActivatePage(page pages.Page) {
 	window.banner.Hide()
 	window.menu.switcher.Hide()
 
-	// Show secondary controls
-	window.buttons.stack.SetVisibleChildName("secondary")
-
 	id := page.GetID()
-	root := window.pages[id]
-	if root != nil {
+
+	// Install page?
+	if id == pages.PageIDInstall {
+		window.buttons.stack.SetVisibleChildName("primary")
+		window.buttons.install.Hide()
+	} else {
+		// Non-install page
+		window.buttons.stack.SetVisibleChildName("secondary")
 		// Update the new page
 		window.SetButtonState(pages.ButtonConfirm, false)
-		page.ResetChanges()
-		// Set the root stack to show the new page
-		window.rootStack.SetVisibleChild(window.pages[id])
 	}
+
+	// Allow page to take control now
+	page.ResetChanges()
+
+	// Set the root stack to show the new page
+	window.rootStack.SetVisibleChild(window.pages[id])
 }
 
 // SetButtonState is called by the pages to enable/disable certain buttons.
@@ -416,14 +439,12 @@ func (window *Window) SetButtonState(flags pages.Button, enabled bool) {
 	if flags&pages.ButtonConfirm == pages.ButtonConfirm {
 		window.buttons.confirm.SetSensitive(enabled)
 	}
+	if flags&pages.ButtonQuit == pages.ButtonQuit {
+		window.buttons.quit.SetSensitive(enabled)
+	}
 }
 
 // beginInstall begins the real installation routine
 func (window *Window) beginInstall() {
-	err := window.model.Validate()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("Validation passed")
+	window.ActivatePage(window.menu.install)
 }
