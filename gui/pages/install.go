@@ -24,7 +24,12 @@ type InstallPage struct {
 	model      *model.SystemInstall
 	layout     *gtk.Box
 
-	pbar *gtk.ProgressBar // Progress bar
+	pbar      *gtk.ProgressBar    // Progress bar
+	list      *gtk.ListBox        // Scrolling list for messages
+	selection int                 // Current progress selection
+	scroll    *gtk.ScrolledWindow // Hold the list
+
+	widgets map[int]*InstallWidget // mapping of widgets
 }
 
 // NewInstallPage constructs a new InstallPage.
@@ -35,6 +40,8 @@ func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, er
 	page := &InstallPage{
 		controller: controller,
 		model:      model,
+		widgets:    make(map[int]*InstallWidget),
+		selection:  -1,
 	}
 
 	// Create layout
@@ -42,6 +49,26 @@ func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, er
 	if err != nil {
 		return nil, err
 	}
+
+	// Create scroller
+	page.scroll, err = gtk.ScrolledWindowNew(nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	page.layout.PackStart(page.scroll, true, true, 0)
+
+	// Create list
+	page.list, err = gtk.ListBoxNew()
+	if err != nil {
+		return nil, err
+	}
+	page.list.SetSelectionMode(gtk.SELECTION_NONE)
+	page.scroll.Add(page.list)
+	st, err := page.list.GetStyleContext()
+	if err != nil {
+		return nil, err
+	}
+	st.AddClass("scroller-special")
 
 	// Create progressbar
 	page.pbar, err = gtk.ProgressBarNew()
@@ -135,11 +162,40 @@ func (install *InstallPage) ResetChanges() {
 // Following methods are for the progress.Client API
 func (install *InstallPage) Desc(desc string) {
 	fmt.Println(desc)
+
+	// Increment selection
+	install.selection++
+
+	// do we have an old widget? if so, mark complete
+	if install.selection > 0 {
+		install.widgets[install.selection-1].Completed()
+	}
+
+	// Create new install widget
+	widg, err := NewInstallWidget(desc)
+	if err != nil {
+		panic(err)
+	}
+
+	// Pack it into the list
+	install.list.Add(widg.GetRootWidget())
+
+	// Scroll to the new item
+	row := install.list.GetRowAtIndex(install.selection)
+	install.list.SelectRow(row)
+	scrollToView(install.scroll, install.list, &row.Widget)
 }
 
 // Failure handles failure to install
 func (install *InstallPage) Failure() {
+	install.widgets[install.selection].MarkStatus(false)
 	fmt.Println("Failure")
+}
+
+// Success notes the install was successful
+func (install *InstallPage) Success() {
+	fmt.Println("Success")
+	install.widgets[install.selection].MarkStatus(true)
 }
 
 // LoopWaitDuration will return the duration for step-waits
@@ -154,9 +210,4 @@ func (install *InstallPage) Partial(total int, step int) {
 // Step will step the progressbar in indeterminate mode
 func (install *InstallPage) Step() {
 	install.pbar.Pulse()
-}
-
-// Success notes the install was successful
-func (install *InstallPage) Success() {
-	fmt.Println("Success")
 }

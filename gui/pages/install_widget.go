@@ -46,6 +46,8 @@ func NewInstallWidget(desc string) (*InstallWidget, error) {
 	widget.image.SetVAlign(gtk.ALIGN_CENTER)
 	widget.layout.PackEnd(widget.image, false, false, 0)
 
+	widget.layout.ShowAll()
+
 	return widget, nil
 }
 
@@ -69,4 +71,9 @@ func (widget *InstallWidget) Completed() {
 	if st, err := widget.layout.GetStyleContext(); err == nil {
 		st.AddClass("dim-label")
 	}
+}
+
+// GetRootWidget will return the root embeddable widget
+func (widget *InstallWidget) GetRootWidget() gtk.IWidget {
+	return widget.layout
 }
