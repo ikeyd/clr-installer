@@ -6,7 +6,7 @@ package pages
 
 import (
 	"fmt"
-	_ "github.com/clearlinux/clr-installer/controller"
+	ctrl "github.com/clearlinux/clr-installer/controller"
 	"github.com/clearlinux/clr-installer/model"
 	"github.com/clearlinux/clr-installer/progress"
 	"github.com/gotk3/gotk3/gtk"
@@ -90,11 +90,11 @@ func (install *InstallPage) ResetChanges() {
 	// TODO: Disable closing of the installer
 	go func() {
 		progress.Set(install)
-		//err := ctrl.Install(install.controller.GetRootDir(),
-		//	install.model,
-		//	install.controller.GetOptions(),
-		//)
-		//panic(err)
+		err := ctrl.Install(install.controller.GetRootDir(),
+			install.model,
+			install.controller.GetOptions(),
+		)
+		panic(err)
 	}()
 
 }
