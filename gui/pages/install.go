@@ -89,12 +89,19 @@ func (install *InstallPage) ResetChanges() {
 
 	// TODO: Disable closing of the installer
 	go func() {
+		// Become the progress hook
 		progress.Set(install)
+
+		// Go install it
 		err := ctrl.Install(install.controller.GetRootDir(),
 			install.model,
 			install.controller.GetOptions(),
 		)
-		panic(err)
+
+		// TODO: Handle this moar better.
+		if err != nil {
+			panic(err)
+		}
 	}()
 
 }
