@@ -60,31 +60,38 @@ func (t *Telemetry) IsDone() bool {
 	return t.didConfirm
 }
 
+// GetID returns the ID for this page
 func (t *Telemetry) GetID() int {
 	return PageIDTelemetry
 }
 
+// GetIcon returns the icon for this page
 func (t *Telemetry) GetIcon() string {
 	return "network-transmit-receive"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (t *Telemetry) GetRootWidget() gtk.IWidget {
 	return t.box
 }
 
+// GetSummary will return the summary for this page
 func (t *Telemetry) GetSummary() string {
 	return "Telemetry"
 }
 
+// GetTitle will return the title for this page
 func (t *Telemetry) GetTitle() string {
 	return telemetry.Title
 }
 
+// StoreChanges will store this pages changes into the model
 func (t *Telemetry) StoreChanges() {
 	t.didConfirm = true
 	t.model.EnableTelemetry(t.check.GetActive())
 }
 
+// ResetChanges will reset this page to match the model
 func (t *Telemetry) ResetChanges() {
 	t.controller.SetButtonState(ButtonConfirm, true)
 	t.check.SetActive(t.model.IsTelemetryEnabled())

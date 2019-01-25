@@ -143,31 +143,38 @@ func (disk *DiskConfig) IsDone() bool {
 	return disk.model.TargetMedias != nil
 }
 
+// GetID returns the ID for this page
 func (disk *DiskConfig) GetID() int {
 	return PageIDDiskConfig
 }
 
+// GetIcon returns the icon for this page
 func (disk *DiskConfig) GetIcon() string {
 	return "media-removable"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (disk *DiskConfig) GetRootWidget() gtk.IWidget {
 	return disk.box
 }
 
+// GetSummary will return the summary for this page
 func (disk *DiskConfig) GetSummary() string {
 	return "Configure Media"
 }
 
+// GetTitle will return the title for this page
 func (disk *DiskConfig) GetTitle() string {
 	return disk.GetSummary() + " - WARNING: SUPER EXPERIMENTAL"
 }
 
+// StoreChanges will store this pages changes into the model
 func (disk *DiskConfig) StoreChanges() {
 	// Give the active disk to the model
 	disk.model.AddTargetMedia(disk.activeDisk)
 }
 
+// ResetChanges will reset this page to match the model
 func (disk *DiskConfig) ResetChanges() {
 	disk.activeDisk = nil
 	disk.controller.SetButtonState(ButtonConfirm, false)

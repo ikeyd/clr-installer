@@ -42,7 +42,7 @@ type Page interface {
 	ResetChanges() // Reset data to model
 }
 
-// PageController is implemented by the Window struct, and
+// Controller is implemented by the Window struct, and
 // is used by pages and ContentView to exert some control
 // over workflow.
 type Controller interface {
@@ -53,13 +53,26 @@ type Controller interface {
 }
 
 const (
-	PageIDTimezone   = iota
-	PageIDLanguage   = iota
-	PageIDKeyboard   = iota
-	PageIDBundle     = iota
-	PageIDTelemetry  = iota
+	// PageIDTimezone is the timezone page key
+	PageIDTimezone = iota
+
+	// PageIDLanguage is the language page key
+	PageIDLanguage = iota
+
+	// PageIDKeyboard is the keyboard page key
+	PageIDKeyboard = iota
+
+	// PageIDBundle is the bundle page key
+	PageIDBundle = iota
+
+	// PageIDTelemetry is the telemetry page key
+	PageIDTelemetry = iota
+
+	// PageIDDiskConfig is the disk configuration page key
 	PageIDDiskConfig = iota
-	PageIDInstall    = iota // Always last
+
+	// PageIDInstall is the special installation page key
+	PageIDInstall = iota
 )
 
 // Private helper to assist in the ugliness of forcibly scrolling a GtkListBox

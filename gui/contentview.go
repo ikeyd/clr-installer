@@ -91,6 +91,7 @@ func (view *ContentView) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 	view.controller.ActivatePage(view.views[row.GetIndex()])
 }
 
+// UpdateView will update the summary for the given page
 func (view *ContentView) UpdateView(page pages.Page) {
 	view.widgets[page.GetID()].Update()
 }

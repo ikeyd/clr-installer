@@ -220,6 +220,7 @@ func NewWindow(model *model.SystemInstall, rootDir string, options args.Args) (*
 	return window, nil
 }
 
+// ShowDefaultView will set up the default window view
 func (window *Window) ShowDefaultView() {
 	// Ensure menu page is set
 	window.menu.stack.SetVisibleChildName("required")

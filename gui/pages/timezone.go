@@ -97,32 +97,37 @@ func (t *Timezone) IsDone() bool {
 	return t.GetConfiguredValue() != ""
 }
 
+// GetID returns the ID for this page
 func (t *Timezone) GetID() int {
 	return PageIDTimezone
 }
 
+// GetIcon returns the icon for this page
 func (t *Timezone) GetIcon() string {
 	return "preferences-system-time"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (t *Timezone) GetRootWidget() gtk.IWidget {
 	return t.box
 }
 
+// GetSummary will return the summary for this page
 func (t *Timezone) GetSummary() string {
 	return "Choose Timezone"
 }
 
+// GetTitle will return the title for this page
 func (t *Timezone) GetTitle() string {
 	return t.GetSummary()
 }
 
+// StoreChanges will store this pages changes into the model
 func (t *Timezone) StoreChanges() {
 	t.model.Timezone = t.selected
 }
 
-// ResetChanges will find the default model selection and set the
-// timezone as appropriate in the view
+// ResetChanges will reset this page to match the model
 func (t *Timezone) ResetChanges() {
 	code := timezone.DefaultTimezone
 	if t.model.Timezone.Code != "" {

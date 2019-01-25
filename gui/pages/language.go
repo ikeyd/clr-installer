@@ -97,30 +97,37 @@ func (l *Language) IsDone() bool {
 	return l.GetConfiguredValue() != ""
 }
 
+// GetID returns the ID for this page
 func (l *Language) GetID() int {
 	return PageIDLanguage
 }
 
+// GetIcon returns the icon for this page
 func (l *Language) GetIcon() string {
 	return "preferences-desktop-locale"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (l *Language) GetRootWidget() gtk.IWidget {
 	return l.box
 }
 
+// GetSummary will return the summary for this page
 func (l *Language) GetSummary() string {
 	return "Choose Language"
 }
 
+// GetTitle will return the title for this page
 func (l *Language) GetTitle() string {
 	return l.GetSummary()
 }
 
+// StoreChanges will store this pages changes into the model
 func (l *Language) StoreChanges() {
 	l.model.Language = l.selected
 }
 
+// ResetChanges will reset this page to match the model
 func (l *Language) ResetChanges() {
 	code := language.DefaultLanguage
 	if l.model.Language.Code != "" {

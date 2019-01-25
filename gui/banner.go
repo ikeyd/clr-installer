@@ -23,7 +23,7 @@ type Banner struct {
 	label    *gtk.Label    // Display label
 }
 
-// MakeHeader constructs the header component
+// NewBanner constructs the header component
 func NewBanner() (*Banner, error) {
 	var err error
 	var pbuf *gdk.Pixbuf
@@ -114,7 +114,7 @@ func (banner *Banner) Hide() {
 	banner.revealer.SetRevealChild(false)
 }
 
-// Installmode updates the text for install mode
+// InstallMode updates the text for install mode
 func (banner *Banner) InstallMode() {
 	labelText := "<span font-size='xx-large'>Thank you\nfor choosing\nClear Linux</span>"
 	labelText += "\n\n<small>VERSION " + model.Version + "</small>"

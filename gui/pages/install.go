@@ -93,38 +93,47 @@ func NewInstallPage(controller Controller, model *model.SystemInstall) (Page, er
 	return page, nil
 }
 
+// IsRequired is just here for the Page API
 func (install *InstallPage) IsRequired() bool {
 	return true
 }
 
+// IsDone is just here for the Page API
 func (install *InstallPage) IsDone() bool {
 	return false
 }
 
+// GetID returns the ID for this page
 func (install *InstallPage) GetID() int {
 	return PageIDInstall
 }
 
+// GetSummary will return the summary for this page
 func (install *InstallPage) GetSummary() string {
 	return "Installing Clear Linux OS"
 }
 
+// GetTitle will return the title for this page
 func (install *InstallPage) GetTitle() string {
 	return "Installing Clear Linux OS"
 }
 
+// GetIcon returns the icon for this page
 func (install *InstallPage) GetIcon() string {
 	return "system-software-install-symbolic"
 }
 
+// GetConfiguredValue returns nothing here
 func (install *InstallPage) GetConfiguredValue() string {
 	return ""
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (install *InstallPage) GetRootWidget() gtk.IWidget {
 	return install.layout
 }
 
+// StoreChanges will store this pages changes into the model
 func (install *InstallPage) StoreChanges() {}
 
 // ResetChanges begins as our initial execution point as we're only going
@@ -165,6 +174,8 @@ func (install *InstallPage) ResetChanges() {
 }
 
 // Following methods are for the progress.Client API
+
+// Desc will push a description box into the view for later marking
 func (install *InstallPage) Desc(desc string) {
 	fmt.Println(desc)
 

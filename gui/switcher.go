@@ -20,7 +20,7 @@ type Switcher struct {
 	}
 }
 
-// MakeHeader constructs the header component
+// NewSwitcher constructs the header component
 func NewSwitcher(stack *gtk.Stack) (*Switcher, error) {
 	var err error
 	var st *gtk.StyleContext

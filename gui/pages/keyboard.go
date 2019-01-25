@@ -97,30 +97,37 @@ func (k *Keyboard) IsDone() bool {
 	return k.GetConfiguredValue() != ""
 }
 
+// GetID returns the ID for this page
 func (k *Keyboard) GetID() int {
 	return PageIDKeyboard
 }
 
+// GetIcon returns the icon for this page
 func (k *Keyboard) GetIcon() string {
 	return "preferences-desktop-keyboard-shortcuts"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (k *Keyboard) GetRootWidget() gtk.IWidget {
 	return k.box
 }
 
+// GetSummary will return the summary for this page
 func (k *Keyboard) GetSummary() string {
 	return "Configure the Keyboard"
 }
 
+// GetTitle will return the title for this page
 func (k *Keyboard) GetTitle() string {
 	return k.GetSummary()
 }
 
+// StoreChanges will store this pages changes into the model
 func (k *Keyboard) StoreChanges() {
 	k.model.Keyboard = k.selected
 }
 
+// ResetChanges will reset this page to match the model
 func (k *Keyboard) ResetChanges() {
 	code := keyboard.DefaultKeyboard
 	if k.model.Keyboard.Code != "" {

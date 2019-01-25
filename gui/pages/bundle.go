@@ -81,7 +81,6 @@ func createBundleWidget(bundle *swupd.Bundle) (*gtk.CheckButton, error) {
 	if set {
 		pbuf, err := gdk.PixbufNewFromFileAtSize(icon, 48, 48)
 		if err != nil {
-			icon = ""
 			set = false
 		} else {
 			img.SetFromPixbuf(pbuf)
@@ -170,26 +169,32 @@ func (bundle *Bundle) IsRequired() bool {
 	return false
 }
 
+// GetID returns the ID for this page
 func (bundle *Bundle) GetID() int {
 	return PageIDBundle
 }
 
+// GetIcon returns the icon for this page
 func (bundle *Bundle) GetIcon() string {
 	return "applications-system"
 }
 
+// GetRootWidget returns the root embeddable widget for this page
 func (bundle *Bundle) GetRootWidget() gtk.IWidget {
 	return bundle.box
 }
 
+// GetSummary will return the summary for this page
 func (bundle *Bundle) GetSummary() string {
 	return "Bundle selection"
 }
 
+// GetTitle will return the title for this page
 func (bundle *Bundle) GetTitle() string {
 	return "Select additional bundles to be added to the system"
 }
 
+// StoreChanges will store this pages changes into the model
 func (bundle *Bundle) StoreChanges() {
 	// Match model selection to our selections
 	for n, b := range bundle.bundles {
@@ -202,6 +207,7 @@ func (bundle *Bundle) StoreChanges() {
 	}
 }
 
+// ResetChanges will reset this page to match the model
 func (bundle *Bundle) ResetChanges() {
 	// Match selection to what's in the model
 	for n, b := range bundle.bundles {

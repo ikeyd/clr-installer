@@ -74,6 +74,9 @@ func NewSummaryWidget(page pages.Page) (*SummaryWidget, error) {
 
 	// Create tick image
 	s.tick, err = gtk.ImageNewFromIconName("task-due-symbolic", gtk.ICON_SIZE_BUTTON)
+	if err != nil {
+		return nil, err
+	}
 	s.tick.SetMarginEnd(4)
 	s.tick.SetMarginTop(6)
 	s.tick.SetHAlign(gtk.ALIGN_START)

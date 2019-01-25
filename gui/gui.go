@@ -12,7 +12,10 @@ import (
 )
 
 const (
+	// ContentViewRequired is defined to map to the Required contentview
 	ContentViewRequired = true
+
+	// ContentViewAdvanced is defined to map to the Advanced contentview
 	ContentViewAdvanced = false
 )
 
