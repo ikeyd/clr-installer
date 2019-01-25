@@ -413,17 +413,21 @@ func (window *Window) ActivatePage(page pages.Page) {
 	fmt.Println("Activating: " + page.GetSummary())
 	window.menu.currentPage = page
 
-	// Hide banner so we can get more room
-	window.banner.Hide()
-	window.menu.switcher.Hide()
-
 	id := page.GetID()
+	window.menu.switcher.Hide()
 
 	// Install page?
 	if id == pages.PageIDInstall {
+		// Show banner so we can be pretty
+		window.banner.Show()
+		window.banner.InstallMode()
+
 		window.buttons.stack.SetVisibleChildName("primary")
 		window.buttons.install.Hide()
 	} else {
+		// Hide banner so we can get more room
+		window.banner.Hide()
+
 		// Non-install page
 		window.buttons.stack.SetVisibleChildName("secondary")
 		// Update the new page

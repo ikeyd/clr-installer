@@ -113,3 +113,10 @@ func (banner *Banner) Hide() {
 	banner.revealer.SetTransitionDuration(250)
 	banner.revealer.SetRevealChild(false)
 }
+
+// Installmode updates the text for install mode
+func (banner *Banner) InstallMode() {
+	labelText := "<span font-size='xx-large'>Thank you\nfor choosing\nClear Linux</span>"
+	labelText += "\n\n<small>VERSION " + model.Version + "</small>"
+	banner.label.SetMarkup(labelText)
+}
