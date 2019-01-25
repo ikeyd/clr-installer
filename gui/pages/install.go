@@ -216,5 +216,7 @@ func (install *InstallPage) Partial(total int, step int) {
 
 // Step will step the progressbar in indeterminate mode
 func (install *InstallPage) Step() {
+	// Pulse twice for visual feedback
+	install.pbar.Pulse()
 	install.pbar.Pulse()
 }
