@@ -131,7 +131,6 @@ func (disk *DiskConfig) onRowActivated(box *gtk.ListBox, row *gtk.ListBoxRow) {
 	disk.controller.SetButtonState(ButtonConfirm, true)
 	idx := row.GetIndex()
 	disk.activeDisk = disk.devs[idx]
-	fmt.Println(disk.activeDisk.GetDeviceFile())
 }
 
 // IsRequired will return true as we always need a DiskConfig
@@ -141,7 +140,7 @@ func (disk *DiskConfig) IsRequired() bool {
 
 // IsDone checks if all the steps are completed
 func (disk *DiskConfig) IsDone() bool {
-	return false
+	return disk.model.TargetMedias != nil
 }
 
 func (disk *DiskConfig) GetID() int {
@@ -164,11 +163,33 @@ func (disk *DiskConfig) GetTitle() string {
 	return disk.GetSummary() + " - WARNING: SUPER EXPERIMENTAL"
 }
 
-func (disk *DiskConfig) StoreChanges() {}
+func (disk *DiskConfig) StoreChanges() {
+	// Give the active disk to the model
+	disk.model.AddTargetMedia(disk.activeDisk)
+}
+
 func (disk *DiskConfig) ResetChanges() {
+	disk.activeDisk = nil
+	disk.controller.SetButtonState(ButtonConfirm, false)
+
+	// TODO: Match list to target medias. But we have an ugly
+	// list of root target medias and you can only select one
+	// right now as our manual partitioning is missing.
+	if disk.model.TargetMedias == nil {
+		return
+	}
+
+	// Select row in the box, activate it and scroll to it
+	row := disk.list.GetRowAtIndex(0)
+	disk.list.SelectRow(row)
+	scrollToView(disk.scroll, disk.list, &row.Widget)
+	disk.onRowActivated(disk.list, row)
 }
 
 // GetConfiguredValue returns our current config
 func (disk *DiskConfig) GetConfiguredValue() string {
-	return "No usable media found"
+	if disk.model.TargetMedias == nil {
+		return "No usable media found"
+	}
+	return fmt.Sprintf("WARNING: Wiping %s", disk.model.TargetMedias[0].GetDeviceFile())
 }
