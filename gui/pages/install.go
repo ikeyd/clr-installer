@@ -127,6 +127,7 @@ func (install *InstallPage) ResetChanges() {
 		//	panic(err)
 		//}
 		fmt.Println("Installation completed")
+		install.controller.SetButtonState(ButtonQuit, true)
 	}()
 
 }
