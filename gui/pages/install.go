@@ -85,10 +85,18 @@ func (install *InstallPage) ResetChanges() {
 		return
 	}
 
-	progress.Set(install)
-	//err := controller.Install(page.tui.rootDir, page.getModel(), page.tui.options)
-
 	fmt.Println("Validation passed")
+
+	// TODO: Disable closing of the installer
+	go func() {
+		progress.Set(install)
+		//err := ctrl.Install(install.controller.GetRootDir(),
+		//	install.model,
+		//	install.controller.GetOptions(),
+		//)
+		//panic(err)
+	}()
+
 }
 
 // Following methods are for the progress.Client API
